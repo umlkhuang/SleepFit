@@ -1,0 +1,440 @@
+#
+# generated on 2015/01/03 11:59:32
+#
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.SensingData
+tableName=sensingdata
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+indexName=sensingdata_createTime_idx
+# --field-end--
+# --field-start--
+fieldName=trackDate
+columnName=trackDate
+canBeNull=false
+indexName=sensingdata_trackDate_idx
+# --field-end--
+# --field-start--
+fieldName=movement
+columnName=movement
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=illuminanceMax
+columnName=illuminanceMax
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=illuminanceMin
+columnName=illuminanceMin
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=illuminanceAvg
+columnName=illuminanceAvg
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=illuminanceStd
+columnName=illuminanceStd
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=decibelMax
+columnName=decibelMax
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=decibelMin
+columnName=decibelMin
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=decibelAvg
+columnName=decibelAvg
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=decibelStd
+columnName=decibelStd
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=isCharging
+columnName=isCharging
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=powerlevel
+columnName=powerLevel
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=proximity
+columnName=proximity
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=ssid
+columnName=ssid
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=appUsage
+columnName=appUsage
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.SleepLogger
+tableName=sleeplogger
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=trackDate
+columnName=trackDate
+useGetSet=true
+indexName=sleeplogger_trackDate_idx
+# --field-end--
+# --field-start--
+fieldName=sleepTime
+columnName=sleepTime
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=wakeupTime
+columnName=wakeupTime
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=quality
+columnName=quality
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=finished
+columnName=finished
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.SysEvents
+tableName=sysevents
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=trackDate
+columnName=trackDate
+indexName=sysevents_trackDate_idx
+# --field-end--
+# --field-start--
+fieldName=eventType
+columnName=eventType
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.MovementRaw
+tableName=movementraw
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+indexName=movementraw_createTime_idx
+# --field-end--
+# --field-start--
+fieldName=data
+columnName=data
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.LightRaw
+tableName=lightraw
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+indexName=lightraw_createTime_idx
+# --field-end--
+# --field-start--
+fieldName=data
+columnName=data
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.SoundRaw
+tableName=soundraw
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+indexName=soundraw_createTime_idx
+# --field-end--
+# --field-start--
+fieldName=data
+columnName=data
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.ProximityRaw
+tableName=proximityraw
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+indexName=proximityraw_createTime_idx
+# --field-end--
+# --field-start--
+fieldName=data
+columnName=data
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.LifestyleRaw
+tableName=lifestyleraw
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=trackDate
+columnName=trackDate
+canBeNull=false
+indexName=lifestyleraw_trackDate_idx
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+indexName=lifestyleraw_createTime_idx
+# --field-end--
+# --field-start--
+fieldName=type
+columnName=type
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=typeId
+columnName=typeId
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=logTime
+columnName=logTime
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=selection
+columnName=selection
+defaultValue=0
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=note
+columnName=note
+defaultValue=
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=edu.uml.swin.sleepfit.DB.DailyLog
+tableName=dailylog
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=trackDate
+columnName=trackDate
+canBeNull=false
+indexName=dailylog_trackDate_idx
+# --field-end--
+# --field-start--
+fieldName=createTime
+columnName=createTime
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=numAwakenings
+columnName=numAwakenings
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=timeAwake
+columnName=timeAwake
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=timeToSleep
+columnName=timeToSleep
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=quality
+columnName=quality
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=restored
+columnName=restored
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=stress
+columnName=stress
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=depression
+columnName=depression
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=fatigue
+columnName=fatigue
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=sleepiness
+columnName=sleepiness
+defaultValue=0
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=uploaded
+columnName=uploaded
+defaultValue=false
+useGetSet=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

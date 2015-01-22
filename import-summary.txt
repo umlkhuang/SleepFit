@@ -1,0 +1,117 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Manifest Merging:
+-----------------
+Your project uses libraries that provide manifests, and your Eclipse
+project did not explicitly turn on manifest merging. In Android Gradle
+projects, manifests are always merged (meaning that contents from your
+libraries' manifests will be merged into the app manifest. If you had
+manually copied contents from library manifests into your app manifest
+you may need to remove these for the app to build correctly.
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+From GoogleDateTimePickers:
+* GoogleDateTimePickersLib.iml
+* ic_launcher-web.png
+* proguard-project.txt
+From SleepFit:
+* .idea/
+* .idea/.name
+* .idea/SleepFit.iml
+* .idea/compiler.xml
+* .idea/copyright/
+* .idea/copyright/profiles_settings.xml
+* .idea/encodings.xml
+* .idea/misc.xml
+* .idea/modules.xml
+* .idea/scopes/
+* .idea/scopes/scope_settings.xml
+* .idea/vcs.xml
+* .idea/workspace.xml
+* ic_launcher-web.png
+* proguard-project.txt
+From android-support-v7-cardview:
+* cardview.iml
+From android-support-v7-recyclerview:
+* README.txt
+* recyclerview.iml
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:21.0.3
+android-support-v7-appcompat.jar => com.android.support:appcompat-v7:21.0.3
+
+Replaced Libraries with Dependencies:
+-------------------------------------
+The importer recognized the following library projects as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the source files in your project were of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the library replacement in the import wizard and try
+again:
+
+android-support-v7-appcompat => [com.android.support:appcompat-v7:21.0.3]
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+In GoogleDateTimePickers:
+* AndroidManifest.xml => googleDateTimePickers/src/main/AndroidManifest.xml
+* assets/ => googleDateTimePickers/src/main/assets/
+* res/ => googleDateTimePickers/src/main/res/
+* src/ => googleDateTimePickers/src/main/java/
+In android-support-v7-cardview:
+* AndroidManifest.xml => androidsupportv7cardview/src/main/AndroidManifest.xml
+* assets/ => androidsupportv7cardview/src/main/assets/
+* res/ => androidsupportv7cardview/src/main/res/
+* src/ => androidsupportv7cardview/src/main/java/
+In android-support-v7-recyclerview:
+* AndroidManifest.xml => androidsupportv7recyclerview/src/main/AndroidManifest.xml
+* assets/ => androidsupportv7recyclerview/src/main/assets/
+* res/ => androidsupportv7recyclerview/src/main/res/
+* src/ => androidsupportv7recyclerview/src/main/java/
+In SleepFit:
+* AndroidManifest.xml => sleepFit/src/main/AndroidManifest.xml
+* assets/ => sleepFit/src/main/assets/
+* libs/androidplot-core-0.6.1.jar => sleepFit/libs/androidplot-core-0.6.1.jar
+* libs/httpclient-4.3.2.jar => sleepFit/libs/httpclient-4.3.2.jar
+* libs/httpclient-cache-4.3.2.jar => sleepFit/libs/httpclient-cache-4.3.2.jar
+* libs/httpcore-4.3.1.jar => sleepFit/libs/httpcore-4.3.1.jar
+* libs/httpmime-4.3.2.jar => sleepFit/libs/httpmime-4.3.2.jar
+* libs/ormlite-android-4.48.jar => sleepFit/libs/ormlite-android-4.48.jar
+* libs/ormlite-core-4.48.jar => sleepFit/libs/ormlite-core-4.48.jar
+* res/ => sleepFit/src/main/res/
+* src/ => sleepFit/src/main/java/
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

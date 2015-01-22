@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="wrap_content"
+    android:background="#ffffffff">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#00ffffff">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/ic_launcher"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/transparent">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
+                    android:text="Sleep time:"
+                    android:id="@+id/noti_sleeptime_title"
+                    android:textStyle="bold"
+                    android:textSize="14dp"
+                    android:background="@android:color/transparent"
+                    android:textColor="#ff000000" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
+                    android:text="Small Text"
+                    android:id="@+id/noti_sleeptime"
+                    android:layout_marginLeft="5dp"
+                    android:background="@android:color/transparent"
+                    android:textColor="#ff222222" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@android:color/transparent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
+                    android:text="Sleep debt:"
+                    android:id="@+id/noti_sleepdebt_title"
+                    android:textStyle="bold"
+                    android:textSize="14dp"
+                    android:background="@android:color/transparent"
+                    android:textColor="#ff000000" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
+                    android:text="Small Text"
+                    android:id="@+id/noti_sleepdebt"
+                    android:layout_marginLeft="5dp"
+                    android:background="@android:color/transparent"
+                    android:textColor="#ff222222" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
+                android:text="Please touch to log your sleep diary."
+                android:id="@+id/noti_info_title"
+                android:layout_marginTop="3dp"
+                android:background="@android:color/transparent"
+                android:textColor="#ff444444" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

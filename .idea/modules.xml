@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SleepFit.iml" filepath="$PROJECT_DIR$/SleepFit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/googleDateTimePickers/googleDateTimePickers.iml" filepath="$PROJECT_DIR$/googleDateTimePickers/googleDateTimePickers.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sleepFit/sleepFit.iml" filepath="$PROJECT_DIR$/sleepFit/sleepFit.iml" />
+    </modules>
+  </component>
+</project>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_item_title">#fff</color>
+    <!-- color name="list_background">#303030</color -->
+    <color name="list_background">#163004</color>
+    <color name="actionbar_background">#163004</color>
+    <!-- color name="list_background_pressed">#992416</color-->
+    <color name="list_background_pressed">#2C6C02</color>
+    <color name="list_divider">#272727</color>
+    <color name="counter_text_bg">#626262</color>
+    <color name="counter_text_color">#c5c4c4</color>
+    <color name="light_blue">#ff33b5e5</color>
+    <color name="royal_blue">#002366</color>
+    
+    <color name="fab_color_1">#ff5252</color>
+    <color name="fab_color_1_muted">#ff8080</color>
+    <color name="fab_color_2">#9c27b0</color>
+    <color name="fab_color_2_muted">#a56ab0</color>
+</resources>

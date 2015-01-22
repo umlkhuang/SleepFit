@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SleepFit</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+    <string name="save_string">SAVE</string>
+    <string name="left_arrow">Previous</string>
+    <string name="right_arrow">Next</string>
+    <string name="lifestyle_tips_title">Sleep Tip:</string>
+    <string name="lifestyle_type_title">Lifestyle Type:</string>
+    <string name="add_lifestyle_title">Add Lifestyle</string>
+    <string name="pick_date_title">Date</string>
+    <string name="pick_time_title">Time</string>
+    <string name="lifestyle_note_title">Note</string>
+
+    <string-array name="nav_drawer_items">
+        <item>Home</item>
+        <item>Last night sensing</item>
+        <item>Lifestyle log</item>
+        <item>Graphs</item>
+        <item>History</item>
+        <item>Stats</item>
+    </string-array>
+
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_sleep</item>
+        <item>@drawable/ic_lifestyle</item>
+        <item>@drawable/ic_graphs</item>
+        <item>@drawable/ic_history</item>
+        <item>@drawable/ic_stats</item>
+    </array>
+
+    <string-array name="lifestyle_type_items">
+        <item>Caffeine Consumption</item>
+        <item>Food/Drink Consumption</item>
+        <item>Nicotine Consumption</item>
+        <item>Alcohol Consumption</item>
+        <item>Exercise</item>
+        <item>Napping</item>
+        <item>Emotions/Stress</item>
+        <item>Medications/Illness</item>
+        <item>Fatigue/Sleepiness</item>
+    </string-array>
+
+    <array name="lifestyle_icons">
+        <item>@drawable/ic_coffee</item>
+        <item>@drawable/ic_food</item>
+        <item>@drawable/ic_cigarette</item>
+        <item>@drawable/ic_alcohol</item>
+        <item>@drawable/ic_exercise</item>
+        <item>@drawable/ic_napping</item>
+        <item>@drawable/ic_emotion</item>
+        <item>@drawable/ic_medications</item>
+        <item>@drawable/ic_fatigue</item>
+    </array>
+
+    <string-array name="lifestyle_tip_items">
+        <item>Caffeine is a stimulant and should be stopped four to six hours before bedtime. Caffeine is in coffee, soda, iced tea, chocolate, and various over-the-counter medications. Remember, caffeine builds up throughout the day, so two cups of coffee at dinner and some chocolate ice cream can be close to 500 milligrams of caffeine, a large dose. It is also a little-known fact that caffeine can stay in the system for up to 12 hours. So try not to have any past lunchtime and have decaffeinated coffee after dinner. One note of caution: Be careful if you are a big caffeine person and you cut yourself off too quickly, because you will get headaches, which of course will keep you awake.</item>
+        <item>A light snack may be sleep inducing, but a heavy meal too close to bedtime interferes with sleep. Stay away from protein and stick to carbohydrates. Research has shown that small snacks rich in carbohydrates may help improve sleep. In addition, milk or dairy products have been shown to be sleep inducing. Milk has L-tryptophan, which has been shown to help people go to sleep. So skim milk and a low-fat snack may be a good nighttime treat.</item>
+        <item>Nicotine is also a stimulant and should be avoided near bedtime and if you wake up during the night. Thus, having a smoke before bed, although it feels relaxing, is actually putting a stimulant into your bloodstream. Recent research has shown that if you must smoke, take long, slow drags and pause between puffs, as this method produces the least stimulating effects, as opposed to short, quick puffs. (We are not condoning smoking, but if you must, at least follow these suggestions for more restful sleep). Also, cut back before bed have fewer cigarettes during the four hours before bed, and do not have any 30 to 45 minutes before bed.</item>
+        <item>Alcohol is a depressant; although it may make it easier to fall asleep, it causes you to wake up during the night. As alcohol is digested your body goes into withdrawal from the alcohol, causing nighttime awakenings and often nightmares. Excessive alcohol use can lead to dependence, and the withdrawal from alcohol dependence can also affect your sleep.</item>
+        <item>You may not want to exercise vigorously just before bed. It may be best to exercise late in the afternoon. Still, some studies have shown that exercise right before bed is not as bad as was once thought, unless you are the type of person who becomes more alert with exercise.</item>
+        <item>While naps do not necessarily make up for inadequate or poor quality nighttime sleep, a mid-afternoon nap of 20 to 30 minutes can help you stay alert for more than two hours when you\'re sleep deprived, according to research from the journal Sleep. But it\'s not just insomniacs who benefit from some midday Zzs. Napping can also improve alertness, performance, creativity and provide a slew of other benefits among the well rested and yawning masses alike.</item>
+        <item>Stress is our response to daily life. It affects us emotionally, physically, and behaviorally. The right amount of stress can be a positive force that helps us to do our best and to keep alert and energetic. Too much stress, however, can make us tense and anxious and can cause sleep problems.</item>
+        <item>A number of drugs disrupt sleep, while others can cause daytime drowsiness. If you rely on medications for a chronic condition or even minor ailments, you may find yourself sleep-deprived or battling daytime drowsiness. Certain heart, blood pressure, and asthma drugs, as well as over-the-counter medicines for colds, allergies, and headaches, can interrupt normal sleep patterns.</item>
+        <item>We all experience poor (or restricted) sleep from time-to-time and therefore are familiar with its consequences on our daytime functioning. Among the most common are fatigue and sleepiness. Although we might use these terms synonymously, they technically refer to different (though clearly related) things. Sleepiness reflects one\'s propensity to fall asleep (or inability to stay awake), while fatigue refers to lethargy, or an inability to maintain levels of performance on a given task.</item>
+    </string-array>
+
+    <array name="lifestyle_caffeine_selections">
+        <item>One cup regular coffee</item>
+        <item>One cup decaf coffee</item>
+    </array>
+    <array name="lifestyle_food_selections">
+        <item>Eat less than regular meals</item>
+        <item>Just as usual</item>
+        <item>It\'s a rich meal</item>
+    </array>
+    <array name="lifestyle_cigarette_selections">
+        <item>One smoke</item>
+        <item>Two smokes</item>
+        <item>More than two smokes</item>
+    </array>
+    <array name="lifestyle_alcohol_selections">
+        <item>One glass</item>
+        <item>Two glasses</item>
+        <item>More than two glasses</item>
+    </array>
+    <array name="lifestyle_exercise_selection">
+        <item>Less than 30 minutes</item>
+        <item>Between 30 to 60 minutes</item>
+        <item>More than an hour</item>
+    </array>
+    <array name="lifestyle_napping_selection">
+        <item>Less than 20 minutes</item>
+        <item>Between 20 to 40 minutes</item>
+        <item>Between 40 to 60 minutes</item>
+        <item>More than an hour</item>
+    </array>
+    <array name="lifestyle_emotion_selection">
+        <item>Very happy and relax</item>
+        <item>Feels good</item>
+        <item>Just as usual</item>
+        <item>Feels a little bit sad</item>
+        <item>Stressed and depress</item>
+    </array>
+    <array name="lifestyle_medication_selection">
+        <item>Regular medication</item>
+        <item>Suffering an illness without taking pills</item>
+        <item>Taking pills for illness</item>
+    </array>
+    <array name="lifestyle_fatigue_selection">
+        <item>Had to struggle to stay awake</item>
+        <item>Somewhat tired</item>
+        <item>Somewhat sleepy</item>
+    </array>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+
+    <array name="graph_types">
+        <item>Mobility</item>
+        <item>App usage</item>
+    </array>
+    <array name="graph_show_types">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </array>
+
+    <string name="title_activity_new_lifestyle">NewLifestyleActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_new_fragment">NewFragmentActivity</string>
+    <string name="sleepdebt_title_string">Accumulate Sleep Debt:</string>
+    <string name="title_activity_user_survey">Your Basic Information</string>
+    <string name="survey_age_title">"Your age: "</string>
+    <string name="survey_gender_title">"Gender: "</string>
+    <string name="survey_racial_title">Your racial background. Mark all that apply.</string>
+    <string name="survey_racial_checkA">White, European descent</string>
+    <string name="survey_racial_checkB">Black, African American, African</string>
+    <string name="survey_racial_checkC">American Indian, Alaska Native</string>
+    <string name="survey_racial_checkD">Asian, Asian American (includes Filipino, Chinese, Pacific Islander, etc.)</string>
+    <string name="survey_racial_checkE">Other</string>
+    <string name="survey_sleep_hours_title">How many hours sleep do you feel you need per day to have good functioning?</string>
+    <string name="sleep_diary_title">Sleep Diary</string>
+    <string name="evening_diary_instruction">"Please complete this diary in the evening. "</string>
+    <string name="sleep_diary_stress_title">How would you rate your overall stress in the past 24 hours?</string>
+    <string name="no_stress_text">Least</string>
+    <string name="stress_text">Extreme</string>
+    <string name="sleep_diary_depression_title">How would you rate depression you have in the past 24 hours?</string>
+    <string name="sleep_diary_fatigue_title">How would you rate your fatigue today?</string>
+    <string name="sleep_diary_sleepiness_title">How would you rate your daytime sleepiness today?</string>
+    <string name="sleep_diary_card_button_text">Update Diary</string>
+    <string name="sleep_diary_card_button_update">Update</string>
+    <string name="sleep_diary_card_button_save">Save</string>
+    <string name="summary_card_bedtime_title">Last night bedtime:</string>
+    <string name="summary_card_waketime_time">Last night waketime:</string>
+    <string name="summary_card_duration_title">Sleep duration:</string>
+    <string name="morning_diary_instruction">Please evaluate your last night\'s sleep. You can also update the bedtime and waketime by clicking the time.</string>
+    <string name="summary_card_quality_text">How would you rate your sleep quality last night?</string>
+    <string name="summary_card_restored_text">How do you feel restored this morning?</string>
+    <string name="title_activity_view_sleep_history">Detail</string>
+    <string name="sleep_history_empty_message">There is no sleep history.</string>
+    <string name="title_activity_setting">Setting</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
