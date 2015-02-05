@@ -33,7 +33,7 @@ public class ViewSleepHistoryActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			Log.d(Constants.TAG, "In onCreate of ViewSleepHistoryActivity");
 			
-			if (mHomeFragment == null) mHomeFragment = HomeFragment.newInstance(mTrackDate);
+			if (mHomeFragment == null) mHomeFragment = HomeFragment.newInstance(mTrackDate, true, true, true, true);
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, mHomeFragment).commit();
 		} 
@@ -41,6 +41,7 @@ public class ViewSleepHistoryActivity extends ActionBarActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(mTrackDate);
 	}
 
 	@Override
@@ -57,11 +58,11 @@ public class ViewSleepHistoryActivity extends ActionBarActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		switch (id) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 		}
 	}
 

@@ -10,6 +10,8 @@ import mirko.android.datetimepicker.time.TimePickerDialog;
 import mirko.android.datetimepicker.time.TimePickerDialog.OnTimeSetListener;
 import edu.uml.swin.sleepfit.R;
 import edu.uml.swin.sleepfit.util.Constants;
+
+import android.app.ActionBar;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -37,16 +39,23 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 	@Override
 	public void onBindViewHolder(final ViewHolder viewHolder, int idx) {
 		HomeCard card = mCards.get(idx);
+
 		if (idx == 0) {
+            if (!card.mVisable) {
+                ((SummaryViewHolder) viewHolder).mCardView.setVisibility(View.GONE);
+                ((SummaryViewHolder) viewHolder).mCardView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
+                return;
+            }
+
 			((SummaryViewHolder) viewHolder).mBedtimeText.setText(card.mBedtimeStr);
 			((SummaryViewHolder) viewHolder).mOldBedtimeStr = card.mBedtimeStr;
-			((SummaryViewHolder) viewHolder).mBedtimeText.setEnabled(false);
+			//((SummaryViewHolder) viewHolder).mBedtimeText.setEnabled(false);
 			((SummaryViewHolder) viewHolder).mOldBedtime = card.mSleepTime;
 			((SummaryViewHolder) viewHolder).mNewBedtime = card.mSleepTime;
 			
 			((SummaryViewHolder) viewHolder).mWaketimeText.setText(card.mWaketimeStr);
 			((SummaryViewHolder) viewHolder).mOldWaketimeStr = card.mWaketimeStr;
-			((SummaryViewHolder) viewHolder).mWaketimeText.setEnabled(false);
+			//((SummaryViewHolder) viewHolder).mWaketimeText.setEnabled(false);
 			((SummaryViewHolder) viewHolder).mOldWaketime = card.mWakeTime;
 			((SummaryViewHolder) viewHolder).mNewWaketime = card.mWakeTime;
 			
@@ -144,29 +153,41 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 			((SummaryViewHolder) viewHolder).mDurationText.setText(card.mDurationStr);
 			
 			((SummaryViewHolder) viewHolder).mQualityRating.setRating(card.mQualityRate);
-			((SummaryViewHolder) viewHolder).mQualityRating.setIsIndicator(true);
+			//((SummaryViewHolder) viewHolder).mQualityRating.setIsIndicator(true);
 			
 			((SummaryViewHolder) viewHolder).mRestoredRating.setRating(card.mRestoredRate);
-			((SummaryViewHolder) viewHolder).mRestoredRating.setIsIndicator(true);
+			//((SummaryViewHolder) viewHolder).mRestoredRating.setIsIndicator(true);
 			
 			((SummaryViewHolder) viewHolder).mSaveButton.setChecked(false);
 			
 			((SummaryViewHolder) viewHolder).mSleepDebt = ((SummaryViewHolder) viewHolder).getSleepDebt();
 			((SummaryViewHolder) viewHolder).updateSleepDebt();
 		} else if (idx == 1) {
+            if (!card.mVisable) {
+                ((DiaryViewHolder) viewHolder).mCardView.setVisibility(View.GONE);
+                ((DiaryViewHolder) viewHolder).mCardView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
+                return;
+            }
+
+            if (card.mNapTime > 0) {
+                ((DiaryViewHolder) viewHolder).mNapTimeText.setText(String.valueOf(card.mNapTime));
+            } else {
+                ((DiaryViewHolder) viewHolder).mNapTimeText.setText("0");
+            }
+
 			((DiaryViewHolder) viewHolder).mStressRating.setRating(card.mStressRate);
-			((DiaryViewHolder) viewHolder).mStressRating.setIsIndicator(true);
+			//((DiaryViewHolder) viewHolder).mStressRating.setIsIndicator(true);
 			
 			((DiaryViewHolder) viewHolder).mDepressionRating.setRating(card.mDepressionRate);
-			((DiaryViewHolder) viewHolder).mDepressionRating.setIsIndicator(true);
+			//((DiaryViewHolder) viewHolder).mDepressionRating.setIsIndicator(true);
 			
 			((DiaryViewHolder) viewHolder).mFatigueRating.setRating(card.mFatigueRate);
-			((DiaryViewHolder) viewHolder).mFatigueRating.setIsIndicator(true);
+			//((DiaryViewHolder) viewHolder).mFatigueRating.setIsIndicator(true);
 			
 			((DiaryViewHolder) viewHolder).mSleepinessRating.setRating(card.mSleepinessRate);
-			((DiaryViewHolder) viewHolder).mSleepinessRating.setIsIndicator(true); 
+			//((DiaryViewHolder) viewHolder).mSleepinessRating.setIsIndicator(true);
 			
-			((DiaryViewHolder) viewHolder).mToggleButton.setChecked(false);
+			//((DiaryViewHolder) viewHolder).mToggleButton.setChecked(false);
             ((DiaryViewHolder) viewHolder).trackDate = card.mTrackDate;
 		} else {
 			((LifestyleViewHolder) viewHolder).mLifestyleImageView.setImageResource(card.mLifestyleIconId);
@@ -196,16 +217,16 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 				mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_exercise_selection);
 				break;
 			case 5:
-				mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_napping_selection);
+                mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_medication_selection);
 				break;
 			case 6:
-				mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_emotion_selection);
+                mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_napping_selection);
 				break;
 			case 7:
-				mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_medication_selection);
+                mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_emotion_selection);
 				break;
 			case 8:
-				mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_fatigue_selection);
+                mSelectionOptions = mContext.getResources().getStringArray(R.array.lifestyle_fatigue_selection);
 				break;
 			default:
 				break;

@@ -31,6 +31,9 @@ public class SleepLogger implements Serializable {
 	
 	@DatabaseField(columnName = "quality", useGetSet = true)
 	private int quality;
+
+    @DatabaseField(columnName = "naptime", useGetSet = true, defaultValue = "0")
+    private int naptime;
 	
 	@DatabaseField(columnName = "finished", useGetSet = true)
 	private boolean finished;
@@ -48,16 +51,18 @@ public class SleepLogger implements Serializable {
 		this.sleepTime = null;
 		this.wakeupTime = null;
 		this.quality = 3;
+        this.naptime = 0;
 		this.finished = false;
 		this.uploaded = false;
 	}
 	
-	public SleepLogger(long millis, String trackDate, Date sleepTime, Date wakeupTime, int quality, boolean finished, boolean uploaded) {
+	public SleepLogger(long millis, String trackDate, Date sleepTime, Date wakeupTime, int naptime, int quality, boolean finished, boolean uploaded) {
 		this.createTime = new Date(millis);
 		this.trackDate = trackDate;
 		this.sleepTime = sleepTime;
 		this.wakeupTime = wakeupTime;
-		this.quality = quality; 
+		this.quality = quality;
+        this.naptime = naptime;
 		this.finished = finished;
 		this.uploaded = uploaded;
 	}
@@ -71,6 +76,7 @@ public class SleepLogger implements Serializable {
 		strBuf.append(", ").append("SleepTime = ").append(dateFormatter.format(this.sleepTime));
 		strBuf.append(", ").append("WakeupTime = ").append(dateFormatter.format(this.wakeupTime));
 		strBuf.append(", ").append("Quality = ").append(this.quality);
+        strBuf.append(", ").append("NapTime = ").append(this.naptime);
 		strBuf.append(", ").append("Finished = ").append(this.finished);
 		return strBuf.toString();
 	}
@@ -115,7 +121,15 @@ public class SleepLogger implements Serializable {
 		this.quality = quality;
 	}
 
-	public boolean getFinished() {
+    public int getNaptime() {
+        return naptime;
+    }
+
+    public void setNaptime(int naptime) {
+        this.naptime = naptime;
+    }
+
+    public boolean getFinished() {
 		return finished;
 	}
 

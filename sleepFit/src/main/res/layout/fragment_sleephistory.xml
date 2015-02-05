@@ -16,7 +16,6 @@
         android:id="@+id/sleephistory_card_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/empty_history_text"
-        tools:context=".CountryActivity" />
+        android:layout_below="@+id/empty_history_text" />
     
 </RelativeLayout>

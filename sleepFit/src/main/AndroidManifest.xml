@@ -54,7 +54,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.uml.swin.sleepfit.MainActivity" />
         </activity>
-
         <activity
             android:name=".UserSurvey"
             android:label="@string/title_activity_user_survey" >
@@ -70,6 +69,18 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.uml.swin.sleepfit.MainActivity" />
+        </activity>
+        <activity
+            android:name=".LifestyleDetailActivity"
+            android:label="@string/title_activity_lifestyle_detail" >
+        </activity>
+        <activity
+            android:name=".MorningCardActivity"
+            android:label="@string/title_activity_morning_card" >
+        </activity>
+        <activity
+            android:name=".EveningCardActivity"
+            android:label="@string/title_activity_evening_card" >
         </activity>
     </application>
 

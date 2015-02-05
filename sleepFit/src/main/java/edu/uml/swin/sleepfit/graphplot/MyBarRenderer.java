@@ -32,6 +32,8 @@ public class MyBarRenderer extends BarRenderer<MyBarFormatter> {
 
     @Override
     public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
+        //super.onRender(canvas, plotArea);
+
         int longest = getLongestSeries();
         if(longest == 0) {
             return;  // no data, nothing to do.
@@ -52,6 +54,8 @@ public class MyBarRenderer extends BarRenderer<MyBarFormatter> {
     
     @Override
     public void doDrawLegendIcon(Canvas canvas, RectF rect, BarFormatter formatter) {
+        //super.doDrawLegendIcon(canvas, rect, formatter);
+
         canvas.drawRect(rect, formatter.getFillPaint());
         canvas.drawRect(rect, formatter.getBorderPaint());
     }

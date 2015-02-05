@@ -9,11 +9,46 @@
         <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-de957acb39a35689caeda85a9723a30190e074a1.jar" />
     </item>
     <item
+        jar="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/exploded-aar/SleepFit/googleDateTimePickers/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="bbe1c4d9bdf70e28d324427fd70996fa3dcd5ec4">
+        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/classes-a938f61b66bcdf7561992825248f46860d0d4559.jar" />
+    </item>
+    <item
         jar="/home/ke/workspace/SleepFit/sleepFit/libs/httpcore-4.3.1.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="cb3c057d92cd815b923de0b1a6d71cb69a84b80e">
         <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/httpcore-4.3.1-b17e19f297fe1b031dab7082795d2e151f6f81b3.jar" />
+    </item>
+    <item
+        jar="/home/ke/workspace/SleepFit/sleepFit/libs/androidplot-core-0.6.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b4cff2ddf15b0c16cc4907b2f28ed7bc2637bc33">
+        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/androidplot-core-0.6.2-a0fd48386d314f1c8f78e5012c99b6339ae59cea.jar" />
+    </item>
+    <item
+        jar="/home/ke/workspace/SleepFit/sleepFit/libs/achartengine-1.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9932e3fb9fbe54e80873e77f72a99f79e33b3250">
+        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/achartengine-1.1.0-d7c873fcf468b067a62b83866ac4afa2d429aa5a.jar" />
+    </item>
+    <item
+        jar="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/classes-219f0d5cac9d412ece63437adb17bdd3fdff8372.jar" />
+    </item>
+    <item
+        jar="/home/ke/workspace/SleepFit/sleepFit/libs/httpclient-4.3.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="10a45d03873baa34436ae54548d9f1140d4bb68a">
+        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/httpclient-4.3.2-4dea5495bb3aa0c942d216f642ca79f32468d1b3.jar" />
     </item>
     <item
         jar="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
@@ -30,46 +65,18 @@
         <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/classes-e016f4b7afb1ab4fe91129e1b54d7dcafaf95b2c.jar" />
     </item>
     <item
-        jar="/home/ke/android-sdk-linux/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-14ade7fe4142353aa1c975c7ac7e3d89abe820f8.jar" />
-    </item>
-    <item
-        jar="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/exploded-aar/SleepFit/googleDateTimePickers/unspecified/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="46c749a91bf9bffebd4f61873d1e93b88486b8e7">
-        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/classes-a938f61b66bcdf7561992825248f46860d0d4559.jar" />
-    </item>
-    <item
-        jar="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/classes-219f0d5cac9d412ece63437adb17bdd3fdff8372.jar" />
-    </item>
-    <item
-        jar="/home/ke/workspace/SleepFit/sleepFit/libs/androidplot-core-0.6.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3db0daea52375b26bfa61c59b8df93950bdefbbc">
-        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/androidplot-core-0.6.1-fc9bbe073de2c57ad742a59930e390f30bf4d214.jar" />
-    </item>
-    <item
-        jar="/home/ke/workspace/SleepFit/sleepFit/libs/httpclient-4.3.2.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="10a45d03873baa34436ae54548d9f1140d4bb68a">
-        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/httpclient-4.3.2-4dea5495bb3aa0c942d216f642ca79f32468d1b3.jar" />
-    </item>
-    <item
         jar="/home/ke/workspace/SleepFit/sleepFit/libs/httpmime-4.3.2.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="3202421d9425ced69919b282afa644e7ef0e8fef">
         <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/httpmime-4.3.2-c8884ab9f287314c7e4b4c8b4b1a270bd72f8b08.jar" />
+    </item>
+    <item
+        jar="/home/ke/android-sdk-linux/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-14ade7fe4142353aa1c975c7ac7e3d89abe820f8.jar" />
     </item>
     <item
         jar="/home/ke/workspace/SleepFit/sleepFit/libs/ormlite-core-4.48.jar"

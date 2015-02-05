@@ -3,6 +3,7 @@ package edu.uml.swin.sleepfit;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -36,9 +37,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LifestyleFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class LifestyleDetailViewFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 	private static final String ARG_SECTION_NUMBER = "section_number";
-	
+
+    private TextView mLifestyleTypeNameText;
 	private TextView mLifestyleTipText;
 	private Spinner mLifestyleSpinner;
 	private EditText mDatePicker;
@@ -61,19 +63,40 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
 	private int mSelectionPosition;
 	private String[] mTips;
 	private String[] mSelectionOptions;
+    private String mTrackDate;
+    private String[] mLifestyleTypes;
 	
 	private DatabaseHelper mDatabaseHelper;
 	private Dao<LifestyleRaw, Integer> mDao;
-	
-	public static LifestyleFragment newInstance(int sectionNumber) {
-		LifestyleFragment fragment = new LifestyleFragment();
+    private int mLifestyleId;
+
+    /*
+	public static LifestyleDetailViewFragment newInstance(int sectionNumber) {
+		LifestyleDetailViewFragment fragment = new LifestyleDetailViewFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_SECTION_NUMBER, sectionNumber);
 		fragment.setArguments(args);
 		return fragment;
 	}
+
+    public static LifestyleDetailViewFragment newInstance(String trackDate) {
+        LifestyleDetailViewFragment fragment = new LifestyleDetailViewFragment();
+        Bundle args = new Bundle();
+        args.putString("trackDate", trackDate);
+        fragment.setArguments(args);
+        return fragment;
+    }
+    */
+
+    public static LifestyleDetailViewFragment newInstance(int lifestyleId) {
+        LifestyleDetailViewFragment fragment = new LifestyleDetailViewFragment();
+        Bundle args = new Bundle();
+        args.putInt("lifestyleId", lifestyleId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 	
-	public LifestyleFragment() {
+	public LifestyleDetailViewFragment() {
 		mCalendar = Calendar.getInstance();
 		mYesterday = Calendar.getInstance();
 		mYesterday.add(Calendar.DAY_OF_YEAR, -1);
@@ -92,6 +115,16 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
+        String tmpTrackDate = getArguments().getString("trackDate", "");
+        mLifestyleId = getArguments().getInt("lifestyleId", 0);
+
+        if (tmpTrackDate.equals("")) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            this.mTrackDate = dateFormatter.format(new Date(System.currentTimeMillis()));
+        } else {
+            this.mTrackDate = tmpTrackDate;
+        }
+
 		mActivity = activity;
 		if (activity instanceof MainActivity) {
 			((MainActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
@@ -101,7 +134,7 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(Constants.TAG, "In onCreate of LifestyleFragment");
+		Log.d(Constants.TAG, "In onCreate of LifestyleDetailViewFragment");
 		
 		mDatabaseHelper = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class);
 		try {
@@ -116,8 +149,9 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(Constants.TAG, "In onCreateView");
 		
-		View rootView = inflater.inflate(R.layout.fragment_lifestyle, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_lifestyle_view_detail, container, false);
 
+        mLifestyleTypeNameText = (TextView) rootView.findViewById(R.id.lifestyle_type_name);
 		mLifestyleTipText = (TextView) rootView.findViewById(R.id.lifestyle_tips_content);
 		mLifestyleSpinner = (Spinner) rootView.findViewById(R.id.lifestyle_type_spinner);
 		mLifestyleSpinner.setOnItemSelectedListener(this); 
@@ -184,12 +218,45 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
 				mTimePickerDialog.show(getActivity().getFragmentManager(), tag);
 			}
 		});
-
-		mTips = getResources().getStringArray(R.array.lifestyle_tip_items);
-		mLifestyleTipText.setText(mTips[0]);
 		
         return rootView;
 	}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mLifestyleTypes = getResources().getStringArray(R.array.lifestyle_type_items);
+        mLifestyleTypeNameText.setText(mLifestyleTypes[mLifestyleId]);
+
+        switch(mLifestyleId) {
+            case 0:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_caffeine_selections);
+                break;
+            case 1:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_food_selections);
+                break;
+            case 2:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_cigarette_selections);
+                break;
+            case 3:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_alcohol_selections);
+                break;
+            case 4:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_exercise_selection);
+                break;
+            case 5:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_medication_selection);
+                break;
+            default:
+                break;
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mSelectionOptions);
+        mSelectionSpinner.setAdapter(adapter);
+
+        mTips = getResources().getStringArray(R.array.lifestyle_tip_items);
+        mLifestyleTipText.setText(mTips[mLifestyleId]);
+    }
 	
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -218,24 +285,24 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
 			case 2:
 				mSelectionOptions = getResources().getStringArray(R.array.lifestyle_cigarette_selections);
 				break;
-			case 3:
-				mSelectionOptions = getResources().getStringArray(R.array.lifestyle_alcohol_selections);
-				break;
-			case 4:
-				mSelectionOptions = getResources().getStringArray(R.array.lifestyle_exercise_selection);
-				break;
-			case 5:
-				mSelectionOptions = getResources().getStringArray(R.array.lifestyle_napping_selection);
-				break;
-			case 6:
-				mSelectionOptions = getResources().getStringArray(R.array.lifestyle_emotion_selection);
-				break;
-			case 7:
-				mSelectionOptions = getResources().getStringArray(R.array.lifestyle_medication_selection);
-				break;
-			case 8:
-				mSelectionOptions = getResources().getStringArray(R.array.lifestyle_fatigue_selection);
-				break;
+            case 3:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_alcohol_selections);
+                break;
+            case 4:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_exercise_selection);
+                break;
+            case 5:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_medication_selection);
+                break;
+            case 6:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_napping_selection);
+                break;
+            case 7:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_emotion_selection);
+                break;
+            case 8:
+                mSelectionOptions = getResources().getStringArray(R.array.lifestyle_fatigue_selection);
+                break;
 			default:
 				break;
 			}
@@ -274,7 +341,8 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
 				cal.set(Calendar.MINUTE, mSelectedMinute);
 				String[] lifestyles = getActivity().getResources().getStringArray(R.array.lifestyle_type_items);
 				String note = mNoteText.getText().toString().trim();
-				int ret = saveLifestyleLog(createTime, cal.getTimeInMillis(), lifestyles[mLifestylePosition], mLifestylePosition, mSelectionPosition, note);
+				//int ret = saveLifestyleLog(createTime, cal.getTimeInMillis(), lifestyles[mLifestylePosition], mLifestylePosition, mSelectionPosition, note);
+                int ret = saveLifestyleLog(createTime, cal.getTimeInMillis(), lifestyles[mLifestyleId], mLifestyleId, mSelectionPosition, note);
 				
 				CharSequence text;
 				if (ret >= 0) {
@@ -286,7 +354,8 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
 				Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
 				toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 0);
 				toast.show();
-				
+
+                /*
 				if (mActivity instanceof NewLifestyleActivity) {
 					mActivity.onBackPressed();
 				} else {
@@ -294,6 +363,8 @@ public class LifestyleFragment extends Fragment implements AdapterView.OnItemSel
 					mSelectionSpinner.setSelection(0);
 					mNoteText.setText("");
 				}
+				*/
+                mActivity.onBackPressed();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

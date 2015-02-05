@@ -3,9 +3,7 @@ package edu.uml.swin.sleepfit;
 import edu.uml.swin.sleepfit.sensing.SensingService;
 import edu.uml.swin.sleepfit.util.Constants;
 import edu.uml.swin.sleepfit.util.SurveyUploader;
-import edu.uml.swin.sleepfit.util.SyncWorker;
-import android.accounts.Account;
-import android.accounts.AccountManager;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,15 +11,11 @@ import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +24,6 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -52,19 +44,11 @@ public class MainActivity extends ActionBarActivity implements
 	
 	private HomeFragment mHomeFragment;
 	private LastNightFragment mLastNightFragment;
-	private LifestyleFragment mLifestyleFragment;
+	private LifestyleDetailViewFragment mLifestyleDetailViewFragment;
+    private LifestyleListFragment mLifestyleListFragment;
 	private GraphsFragment mGraphsFragment;
 	private SleepHistoryFragment mSleepHistoryFragment;
 	private PlaceholderFragment mPlaceholderFragment;
-	
-	/*
-	// For data syncing
-	public static final String AUTHORITY = "edu.uml.swin.sleepfit.sync.provider";
-	public static final String ACCOUNT_TYPE = "edu.uml.swin.sleepfit.sync";
-	public static final String ACCOUNT = "sync";
-	private Account mAccount;
-	private ContentResolver mResolver;
-	*/
 	
 	class PopupSurveyDialogFragment extends DialogFragment {
 		@Override
@@ -103,15 +87,7 @@ public class MainActivity extends ActionBarActivity implements
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
 				(DrawerLayout) findViewById(R.id.drawer_layout));
 		
-		startService(new Intent(this, SensingService.class)); 
-
-		/*
-		// Create the dummy account
-		mAccount = CreateSyncAccount(this);
-		// Get the content resolver for your app
-        mResolver = getContentResolver();
-        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 10L);
-        */
+		startService(new Intent(this, SensingService.class));
 		
 		SharedPreferences preferences = getSharedPreferences(Constants.SURVEY_FILE_NAME, Context.MODE_PRIVATE);
 		boolean hasDoneSurvey = preferences.getBoolean("doneSurvey", false);
@@ -130,19 +106,6 @@ public class MainActivity extends ActionBarActivity implements
 		// Once user open the App, the local data will be uploaded to backend server
 		//new SyncWorker(getBaseContext(), System.currentTimeMillis()).execute();
 	}
-	
-	/*
-	public static Account CreateSyncAccount(Context context) {
-		// Create the account type and default account
-		Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
-		// Get an instance of the Android account manager
-		AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-		if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-			ContentResolver.setIsSyncable(newAccount, AUTHORITY, 1);
-		}
-		return newAccount;
-	}
-	*/
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position, boolean fromSavedInstanceState) {
@@ -154,30 +117,45 @@ public class MainActivity extends ActionBarActivity implements
 		FragmentManager fragmentManager = getSupportFragmentManager(); 
 		switch (position) {
 		case 0:
+            /*
 			if (mHomeFragment == null) mHomeFragment = HomeFragment.newInstance(position + 1);
 			fragmentManager.beginTransaction()
 					.replace(R.id.container, mHomeFragment).commit();
 			break;
+			*/
+            if (mSleepHistoryFragment == null) mSleepHistoryFragment = SleepHistoryFragment.newInstance(position + 1);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, mSleepHistoryFragment).commit();
+            break;
 		case 1:
 			if (mLastNightFragment == null) mLastNightFragment = LastNightFragment.newInstance(position + 1);
 			fragmentManager.beginTransaction()
 					.replace(R.id.container, mLastNightFragment).commit();
 			break;
 		case 2:
-			if (mLifestyleFragment == null) mLifestyleFragment = LifestyleFragment.newInstance(position + 1);
+            /*
+			if (mLifestyleDetailViewFragment == null) mLifestyleDetailViewFragment = LifestyleDetailViewFragment.newInstance(position + 1);
 			fragmentManager.beginTransaction()
-					.replace(R.id.container, mLifestyleFragment).commit();
+					.replace(R.id.container, mLifestyleDetailViewFragment).commit();
 			break;
+			*/
+
+            if (mLifestyleListFragment == null) mLifestyleListFragment = LifestyleListFragment.newInstance(position + 1);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, mLifestyleListFragment).commit();
+            break;
 		case 3:
 			if (mGraphsFragment == null) mGraphsFragment = GraphsFragment.newInstance(position + 1);
 			fragmentManager.beginTransaction()
 					.replace(R.id.container, mGraphsFragment).commit();
 			break;
+        /*
 		case 4:
 			if (mSleepHistoryFragment == null) mSleepHistoryFragment = SleepHistoryFragment.newInstance(position + 1);
 			fragmentManager.beginTransaction()
 					.replace(R.id.container, mSleepHistoryFragment).commit();
 			break;
+		*/
 		default:
 			if (mPlaceholderFragment == null) mPlaceholderFragment = PlaceholderFragment.newInstance(position + 1);
 			fragmentManager.beginTransaction()

@@ -175,7 +175,7 @@ public class DailyLog implements Serializable {
 		return uploaded;
 	}
 
-	public void setUploaded(boolean uploaded) {
+    public void setUploaded(boolean uploaded) {
 		this.uploaded = uploaded;
 	}
 	

@@ -1,21 +1,35 @@
 package edu.uml.swin.sleepfit;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class NewLifestyleActivity extends ActionBarActivity {
+
+    private String mTrackDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_lifestyle);
-		
+
+        Intent intent = getIntent();
+        mTrackDate = intent.getStringExtra("trackDate");
+        if (mTrackDate == null || mTrackDate.equals("")) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            mTrackDate = dateFormatter.format(new Date(System.currentTimeMillis()));
+        }
+
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, LifestyleFragment.newInstance(-1)).commit();
+					.add(R.id.container, LifestyleListFragment.newInstance()).commit();
 		}
 		
 		ActionBar actionBar = getSupportActionBar();

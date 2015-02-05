@@ -1,5 +1,5 @@
 #
-# generated on 2015/01/03 11:59:32
+# generated on 2015/01/23 05:28:07
 #
 # --table-start--
 dataClass=edu.uml.swin.sleepfit.DB.SensingData
@@ -134,6 +134,12 @@ useGetSet=true
 # --field-start--
 fieldName=quality
 columnName=quality
+useGetSet=true
+# --field-end--
+# --field-start--
+fieldName=naptime
+columnName=naptime
+defaultValue=0
 useGetSet=true
 # --field-end--
 # --field-start--

@@ -140,6 +140,7 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 					tmp.put("createTime", dateFormatter.format(record.getCreateTime()));
 					tmp.put("sleepTime", dateFormatter.format(record.getSleepTime()));
 					tmp.put("wakeupTime", dateFormatter.format(record.getWakeupTime()));
+                    tmp.put("napTime", record.getNaptime());
 					sleepLogJson.put(tmp);
 				} catch (JSONException e) {
 					e.printStackTrace();

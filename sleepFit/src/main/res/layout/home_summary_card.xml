@@ -10,11 +10,14 @@
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
     card_view:cardCornerRadius="2dp"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:id="@+id/card_layout">
     
 	<RelativeLayout
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
 		<ProgressBar
 		    android:id="@+id/sleep_debt_progressbar"
@@ -281,7 +284,16 @@
 			    android:layout_marginBottom="5dp"
 			    android:text="@string/sleep_diary_card_button_text"
 			    android:textOff="@string/sleep_diary_card_button_update"
-			    android:textOn="@string/sleep_diary_card_button_save" />
+			    android:textOn="@string/sleep_diary_card_button_save"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/saveMorningDiaryButton"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:text="@string/sleep_diary_card_button_save" />
 
 		</LinearLayout>
 	

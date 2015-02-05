@@ -2,8 +2,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/home_action_setting"
-        android:icon="@drawable/ic_action_settings"
+        android:id="@+id/home_action_morning_card"
+        android:title="Morning Card"
+        app:showAsAction="withText|ifRoom" />
+
+    <item
+        android:id="@+id/home_action_evening_card"
+        android:title="Evening Card"
+        app:showAsAction="withText|ifRoom" />
+
+    <item
+        android:id="@+id/home_action_fix_bug"
+        android:title="Fix DB Bug"
         app:showAsAction="withText|ifRoom" />
 
 </menu>

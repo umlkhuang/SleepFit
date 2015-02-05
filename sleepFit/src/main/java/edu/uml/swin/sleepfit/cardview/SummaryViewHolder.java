@@ -1,16 +1,13 @@
 package edu.uml.swin.sleepfit.cardview;
 
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import mirko.android.datetimepicker.time.RadialPickerLayout;
 import mirko.android.datetimepicker.time.TimePickerDialog;
-import mirko.android.datetimepicker.time.TimePickerDialog.OnTimeSetListener;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -23,14 +20,18 @@ import edu.uml.swin.sleepfit.DB.DatabaseHelper;
 import edu.uml.swin.sleepfit.DB.SleepLogger;
 import edu.uml.swin.sleepfit.util.Constants;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -68,14 +69,17 @@ public class SummaryViewHolder extends ViewHolder {
 	public RatingBar mQualityRating;
 	public RatingBar mRestoredRating;
 	public ToggleButton mSaveButton;
+    public Button mSaveNormalButton;
+    public CardView mCardView;
 
-	private static float MAX_ABS_SLEEP_DEBT = 12;
+	private static float MAX_ABS_SLEEP_DEBT = 8;
 	private static int DAYS_NEEDED_FOR_SLEEP_DEBT = 7;
-	
+
 	public SummaryViewHolder(View itemView) {
 		super(itemView);
 		mContext = itemView.getContext();
-		
+
+        mCardView = (CardView) itemView.findViewById(R.id.card_layout);
 		mProgressBar = (ProgressBar) itemView.findViewById(R.id.sleep_debt_progressbar);
 		mSleepdebtText = (TextView) itemView.findViewById(R.id.sleepdebt_info);
 		mBedtimeText = (EditText) itemView.findViewById(R.id.bedtimeText);
@@ -84,6 +88,7 @@ public class SummaryViewHolder extends ViewHolder {
 		mQualityRating = (RatingBar) itemView.findViewById(R.id.qualityRatingBar);
 		mRestoredRating = (RatingBar) itemView.findViewById(R.id.restoredRatingBar); 
 		mSaveButton = (ToggleButton) itemView.findViewById(R.id.saveMorningDiaryToggleButton);
+        mSaveNormalButton = (Button) itemView.findViewById(R.id.saveMorningDiaryButton);
 		
 		mDatabaseHelper = OpenHelperManager.getHelper(itemView.getContext(), DatabaseHelper.class);
 		try {
@@ -109,7 +114,7 @@ public class SummaryViewHolder extends ViewHolder {
 					SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 					String trackDate = dateFormatter.format(mNewWaketime);
 					
-					SleepLogger newSleep = new SleepLogger(System.currentTimeMillis(), trackDate, mNewBedtime, mNewWaketime, 0, true, false);
+					SleepLogger newSleep = new SleepLogger(System.currentTimeMillis(), trackDate, mNewBedtime, mNewWaketime, 0, 0, true, false);
 					List<SleepLogger> sleeps = null;
 					QueryBuilder<SleepLogger, Integer> qb = mSleepLogDao.queryBuilder();
 					try {
@@ -164,6 +169,83 @@ public class SummaryViewHolder extends ViewHolder {
                 }
 			}
 		});
+
+        mSaveNormalButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setMessage("Are you sure to save the change?");
+                builder.setCancelable(false);
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                });
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                        String trackDate = dateFormatter.format(mNewWaketime);
+
+                        SleepLogger newSleep = new SleepLogger(System.currentTimeMillis(), trackDate, mNewBedtime, mNewWaketime, 0, 0, true, false);
+                        List<SleepLogger> sleeps = null;
+                        QueryBuilder<SleepLogger, Integer> qb = mSleepLogDao.queryBuilder();
+                        try {
+                            qb.where().eq("trackDate", trackDate);
+                            sleeps = mSleepLogDao.query(qb.prepare());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                            Log.e(Constants.TAG, e.toString());
+                        }
+                        if (sleeps == null || sleeps.size() <= 0) {
+                            try {
+                                mSleepLogDao.create(newSleep);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                UpdateBuilder<SleepLogger, Integer> ub = mSleepLogDao.updateBuilder();
+                                ub.where().eq("trackDate", trackDate);
+                                ub.updateColumnValue("sleepTime", mNewBedtime);
+                                ub.updateColumnValue("wakeupTime", mNewWaketime);
+                                ub.updateColumnValue("finished", true);
+                                ub.updateColumnValue("uploaded", false);
+                                ub.update();
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        try {
+                            UpdateBuilder<DailyLog, Integer> updateBuilder = mDailyLogDao.updateBuilder();
+                            updateBuilder.where().eq("trackDate", trackDate);
+                            updateBuilder.updateColumnValue("quality", (int) mQualityRating.getRating());
+                            updateBuilder.updateColumnValue("restored", (int) mRestoredRating.getRating());
+                            updateBuilder.updateColumnValue("uploaded", false);
+                            updateBuilder.update();
+                        } catch (SQLException e) {
+                            Log.d(Constants.TAG, "Update dailylog failed: " + e.toString());
+                            e.printStackTrace();
+                        }
+
+                        mBedtimeText.setEnabled(false);
+                        mWaketimeText.setEnabled(false);
+                        mQualityRating.setIsIndicator(true);
+                        mRestoredRating.setIsIndicator(true);
+
+                        mSleepDebt = getSleepDebt();
+                        updateSleepDebt();
+
+                        Intent msg = new Intent(Constants.UPDATED_SLEEP_INFO);
+                        mContext.sendBroadcast(msg);
+                    }
+                });
+
+                builder.create().show();
+            }
+        });
 		
 		mBedtimeText.setOnClickListener(new OnClickListener() {
 			private String tag;
@@ -219,7 +301,8 @@ public class SummaryViewHolder extends ViewHolder {
 		
 		if (sleeps != null && sleeps.size() > 0) {
 			for (int i = 0; i < sleeps.size(); i++) {
-				float duration = (float) (sleeps.get(i).getWakeupTime().getTime() - sleeps.get(i).getSleepTime().getTime()) / 1000 / 60 / 60; 
+				float duration = (float) (sleeps.get(i).getWakeupTime().getTime() - sleeps.get(i).getSleepTime().getTime()) / 1000 / 60;
+                duration = (duration + (float) sleeps.get(i).getNaptime()) / 60;
 				float needSleepHours = (24 - duration) / wakeSleepRatio;
 				float tmpDebt = duration - needSleepHours; 
 				//Log.d(Constants.TAG, "Ratio: " + wakeSleepRatio + ", Needed sleep: " + needSleepHours + ", duration: " + duration);

@@ -39,14 +39,14 @@
 
     <string-array name="lifestyle_type_items">
         <item>Caffeine Consumption</item>
-        <item>Food/Drink Consumption</item>
+        <item>Food Consumption</item>
         <item>Nicotine Consumption</item>
         <item>Alcohol Consumption</item>
         <item>Exercise</item>
-        <item>Napping</item>
-        <item>Emotions/Stress</item>
         <item>Medications/Illness</item>
-        <item>Fatigue/Sleepiness</item>
+        <!-- item>Napping</item -->
+        <!-- item>Emotions/Stress</item -->
+        <!-- item>Fatigue/Sleepiness</item -->
     </string-array>
 
     <array name="lifestyle_icons">
@@ -55,10 +55,10 @@
         <item>@drawable/ic_cigarette</item>
         <item>@drawable/ic_alcohol</item>
         <item>@drawable/ic_exercise</item>
-        <item>@drawable/ic_napping</item>
-        <item>@drawable/ic_emotion</item>
         <item>@drawable/ic_medications</item>
-        <item>@drawable/ic_fatigue</item>
+        <!-- item>@drawable/ic_napping</item -->
+        <!-- item>@drawable/ic_emotion</item -->
+        <!-- item>@drawable/ic_fatigue</item -->
     </array>
 
     <string-array name="lifestyle_tip_items">
@@ -67,10 +67,10 @@
         <item>Nicotine is also a stimulant and should be avoided near bedtime and if you wake up during the night. Thus, having a smoke before bed, although it feels relaxing, is actually putting a stimulant into your bloodstream. Recent research has shown that if you must smoke, take long, slow drags and pause between puffs, as this method produces the least stimulating effects, as opposed to short, quick puffs. (We are not condoning smoking, but if you must, at least follow these suggestions for more restful sleep). Also, cut back before bed have fewer cigarettes during the four hours before bed, and do not have any 30 to 45 minutes before bed.</item>
         <item>Alcohol is a depressant; although it may make it easier to fall asleep, it causes you to wake up during the night. As alcohol is digested your body goes into withdrawal from the alcohol, causing nighttime awakenings and often nightmares. Excessive alcohol use can lead to dependence, and the withdrawal from alcohol dependence can also affect your sleep.</item>
         <item>You may not want to exercise vigorously just before bed. It may be best to exercise late in the afternoon. Still, some studies have shown that exercise right before bed is not as bad as was once thought, unless you are the type of person who becomes more alert with exercise.</item>
-        <item>While naps do not necessarily make up for inadequate or poor quality nighttime sleep, a mid-afternoon nap of 20 to 30 minutes can help you stay alert for more than two hours when you\'re sleep deprived, according to research from the journal Sleep. But it\'s not just insomniacs who benefit from some midday Zzs. Napping can also improve alertness, performance, creativity and provide a slew of other benefits among the well rested and yawning masses alike.</item>
-        <item>Stress is our response to daily life. It affects us emotionally, physically, and behaviorally. The right amount of stress can be a positive force that helps us to do our best and to keep alert and energetic. Too much stress, however, can make us tense and anxious and can cause sleep problems.</item>
         <item>A number of drugs disrupt sleep, while others can cause daytime drowsiness. If you rely on medications for a chronic condition or even minor ailments, you may find yourself sleep-deprived or battling daytime drowsiness. Certain heart, blood pressure, and asthma drugs, as well as over-the-counter medicines for colds, allergies, and headaches, can interrupt normal sleep patterns.</item>
-        <item>We all experience poor (or restricted) sleep from time-to-time and therefore are familiar with its consequences on our daytime functioning. Among the most common are fatigue and sleepiness. Although we might use these terms synonymously, they technically refer to different (though clearly related) things. Sleepiness reflects one\'s propensity to fall asleep (or inability to stay awake), while fatigue refers to lethargy, or an inability to maintain levels of performance on a given task.</item>
+        <!-- item>While naps do not necessarily make up for inadequate or poor quality nighttime sleep, a mid-afternoon nap of 20 to 30 minutes can help you stay alert for more than two hours when you\'re sleep deprived, according to research from the journal Sleep. But it\'s not just insomniacs who benefit from some midday Zzs. Napping can also improve alertness, performance, creativity and provide a slew of other benefits among the well rested and yawning masses alike.</item -->
+        <!-- item>Stress is our response to daily life. It affects us emotionally, physically, and behaviorally. The right amount of stress can be a positive force that helps us to do our best and to keep alert and energetic. Too much stress, however, can make us tense and anxious and can cause sleep problems.</item -->
+        <!-- item>We all experience poor (or restricted) sleep from time-to-time and therefore are familiar with its consequences on our daytime functioning. Among the most common are fatigue and sleepiness. Although we might use these terms synonymously, they technically refer to different (though clearly related) things. Sleepiness reflects one\'s propensity to fall asleep (or inability to stay awake), while fatigue refers to lethargy, or an inability to maintain levels of performance on a given task.</item -->
     </string-array>
 
     <array name="lifestyle_caffeine_selections">
@@ -97,6 +97,11 @@
         <item>Between 30 to 60 minutes</item>
         <item>More than an hour</item>
     </array>
+    <array name="lifestyle_medication_selection">
+        <item>Regular medication</item>
+        <item>Suffering an illness without taking pills</item>
+        <item>Taking pills for illness</item>
+    </array>
     <array name="lifestyle_napping_selection">
         <item>Less than 20 minutes</item>
         <item>Between 20 to 40 minutes</item>
@@ -109,11 +114,6 @@
         <item>Just as usual</item>
         <item>Feels a little bit sad</item>
         <item>Stressed and depress</item>
-    </array>
-    <array name="lifestyle_medication_selection">
-        <item>Regular medication</item>
-        <item>Suffering an illness without taking pills</item>
-        <item>Taking pills for illness</item>
     </array>
     <array name="lifestyle_fatigue_selection">
         <item>Had to struggle to stay awake</item>
@@ -137,7 +137,7 @@
     <string name="title_activity_new_lifestyle">NewLifestyleActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_new_fragment">NewFragmentActivity</string>
-    <string name="sleepdebt_title_string">Accumulate Sleep Debt:</string>
+    <string name="sleepdebt_title_string">Sleep Debt (7 days):</string>
     <string name="title_activity_user_survey">Your Basic Information</string>
     <string name="survey_age_title">"Your age: "</string>
     <string name="survey_gender_title">"Gender: "</string>
@@ -148,19 +148,19 @@
     <string name="survey_racial_checkD">Asian, Asian American (includes Filipino, Chinese, Pacific Islander, etc.)</string>
     <string name="survey_racial_checkE">Other</string>
     <string name="survey_sleep_hours_title">How many hours sleep do you feel you need per day to have good functioning?</string>
-    <string name="sleep_diary_title">Sleep Diary</string>
+    <string name="sleep_diary_title">Life Diary</string>
     <string name="evening_diary_instruction">"Please complete this diary in the evening. "</string>
-    <string name="sleep_diary_stress_title">How would you rate your overall stress in the past 24 hours?</string>
+    <string name="sleep_diary_stress_title">How would you rate your overall stress today?</string>
     <string name="no_stress_text">Least</string>
     <string name="stress_text">Extreme</string>
-    <string name="sleep_diary_depression_title">How would you rate depression you have in the past 24 hours?</string>
+    <string name="sleep_diary_depression_title">How would you rate depression you have today?</string>
     <string name="sleep_diary_fatigue_title">How would you rate your fatigue today?</string>
     <string name="sleep_diary_sleepiness_title">How would you rate your daytime sleepiness today?</string>
     <string name="sleep_diary_card_button_text">Update Diary</string>
     <string name="sleep_diary_card_button_update">Update</string>
     <string name="sleep_diary_card_button_save">Save</string>
-    <string name="summary_card_bedtime_title">Last night bedtime:</string>
-    <string name="summary_card_waketime_time">Last night waketime:</string>
+    <string name="summary_card_bedtime_title">Bedtime last night:</string>
+    <string name="summary_card_waketime_time">Waketime today:</string>
     <string name="summary_card_duration_title">Sleep duration:</string>
     <string name="morning_diary_instruction">Please evaluate your last night\'s sleep. You can also update the bedtime and waketime by clicking the time.</string>
     <string name="summary_card_quality_text">How would you rate your sleep quality last night?</string>
@@ -169,5 +169,10 @@
     <string name="sleep_history_empty_message">There is no sleep history.</string>
     <string name="title_activity_setting">Setting</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nap_title">You total nap time today:</string>
+    <string name="minutes_title">Minutes</string>
+    <string name="title_activity_lifestyle_detail">LifeStyle</string>
+    <string name="title_activity_morning_card">MorningCardActivity</string>
+    <string name="title_activity_evening_card">EveningCardActivity</string>
 
 </resources>

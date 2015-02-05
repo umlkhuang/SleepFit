@@ -21,6 +21,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import edu.uml.swin.sleepfit.DB.DatabaseHelper;
 import edu.uml.swin.sleepfit.DB.SleepLogger;
@@ -89,7 +90,7 @@ public class SensingService extends Service implements HttpRequestCallback{
         public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(Constants.COLLECT_CONTEXT_DUTY_MSG)) {
 				Log.d(Constants.TAG, "Context collector: received the message to collect contextual information");
-				
+
 				// Upload the database file to the remote server if needed 
 				long currentTS = System.currentTimeMillis();
 				Calendar rightNow = Calendar.getInstance(); 
@@ -105,20 +106,27 @@ public class SensingService extends Service implements HttpRequestCallback{
 				}
 				
 				if ((currentTS - lastUploadTS) >= Constants.UPLOAD_DATA_INTERVAL) {
+                //if ((currentTS - lastUploadTS) >= 4 * 60 * 1000) {
 					new SyncWorker(getBaseContext(), currentTS).execute();
 					
 					SharedPreferences.Editor editor = preferences.edit();
 					editor.putLong("lastUploadTS", currentTS); 
 					editor.putLong("morningTS", currentTS); 
 					editor.commit();
-				} else if (rightNow.get(Calendar.HOUR_OF_DAY) >= 7 && rightNow.get(Calendar.HOUR_OF_DAY) <= 8 
+				} else if (rightNow.get(Calendar.HOUR_OF_DAY) >= 6 && rightNow.get(Calendar.HOUR_OF_DAY) <= 8
 							&& (currentTS - morningUploadTS) >= Constants.UPLOAD_DATA_INTERVAL_SMALL) {
 					new SyncWorker(getBaseContext(), currentTS).execute();
 					
 					SharedPreferences.Editor editor = preferences.edit();
 					editor.putLong("morningTS", currentTS); 
 					editor.commit();
-				}
+				} else if(rightNow.get(Calendar.HOUR_OF_DAY) >= 6 && rightNow.get(Calendar.HOUR_OF_DAY) <= 8
+                            && (currentTS - morningUploadTS) <= 8 * 60 * 1000) {
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                    String trackDate = dateFormatter.format(rightNow.getTime());
+                    String getSleepUrl = Constants.GET_SLEEP_URL + "?accessCode=" + Constants.getAccessCode(mSensingService) + "&trackDate=" + trackDate;
+                    new HttpRequestTask(mSensingService.getBaseContext(), mSensingService).execute(getSleepUrl);
+                }
 				
 				// make sure the calculated sleep log will be synced to local database in 9AM
 				if (rightNow.get(Calendar.HOUR_OF_DAY) >= 9 && rightNow.get(Calendar.MINUTE) >= 55) {
@@ -442,16 +450,52 @@ public class SensingService extends Service implements HttpRequestCallback{
 				String wakeupTimeStr = jsonObj.getString("wakeupTime");
 				Date sleepTime = dateFormat.parse(sleepTimeStr);
 				Date wakeupTime = dateFormat.parse(wakeupTimeStr);
-				
-				SleepLogger mSleepLog = new SleepLogger(System.currentTimeMillis(), trackDate, sleepTime, wakeupTime, 0, false, true);
-				try {
-					mSleepLogDao.create(mSleepLog);
-				} catch (SQLException e) {
-					Log.d(Constants.TAG, "Add new sleeplogger data record failed: " + e.toString());
-					e.printStackTrace();
-				}
 
-                startServiceNotification();
+                List<SleepLogger> sleeps = null;
+                if (mSleepLogDao != null) {
+                    QueryBuilder<SleepLogger, Integer> qb = mSleepLogDao.queryBuilder();
+                    try {
+                        qb.orderBy("id", false);
+                        sleeps = mSleepLogDao.query(qb.prepare());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        Log.e(Constants.TAG, e.toString());
+                    }
+                }
+
+                if (sleeps != null && sleeps.size() > 0) {
+                    SleepLogger latestSleep = sleeps.get(0);
+
+                    if (latestSleep.getTrackDate().equals(trackDate) && !latestSleep.getFinished()) {
+                        UpdateBuilder<SleepLogger,Integer> ub = mSleepLogDao.updateBuilder();
+                        try {
+                            ub.where().eq("trackDate", trackDate);
+                            ub.updateColumnValue("sleepTime", sleepTime);
+                            ub.updateColumnValue("wakeupTime", wakeupTime);
+                            mSleepLogDao.update(ub.prepare());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (!latestSleep.getTrackDate().equals(trackDate)) {
+                        SleepLogger mSleepLog = new SleepLogger(System.currentTimeMillis(), trackDate, sleepTime, wakeupTime, 0, 0, false, true);
+                        try {
+                            mSleepLogDao.create(mSleepLog);
+                        } catch (SQLException e) {
+                            Log.d(Constants.TAG, "Add new sleeplogger data record failed: " + e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+
+                    startServiceNotification();
+                } else {
+                    SleepLogger mSleepLog = new SleepLogger(System.currentTimeMillis(), trackDate, sleepTime, wakeupTime, 0, 0, false, true);
+                    try {
+                        mSleepLogDao.create(mSleepLog);
+                    } catch (SQLException e) {
+                        Log.d(Constants.TAG, "Add new sleeplogger data record failed: " + e.toString());
+                        e.printStackTrace();
+                    }
+                }
 			} catch (JSONException e) {
 				Log.e(Constants.TAG, e.toString());
 			} catch (ParseException e1) {
@@ -485,6 +529,7 @@ public class SensingService extends Service implements HttpRequestCallback{
                 float sleepHours = Float.valueOf(preferences.getString("sleepHours", "8"));
                 float wakeSleepRatio = (float) ((24.0f - sleepHours) / sleepHours);
                 long duration = sleepLog.getWakeupTime().getTime() - sleepLog.getSleepTime().getTime();
+                duration += sleepLog.getNaptime() * 60 * 1000;
                 float sleepTimeHours = (float) duration / 1000 / 60 / 60;
                 float neededSleep = (24 - sleepTimeHours) / wakeSleepRatio;
                 float sleepDebt = sleepTimeHours - neededSleep;

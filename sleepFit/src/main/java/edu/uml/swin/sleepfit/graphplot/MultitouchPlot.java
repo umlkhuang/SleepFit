@@ -114,6 +114,7 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 	@Override
 	public boolean onTouch(View view, MotionEvent motionEvent)
 	{
+        super.onTouchEvent(motionEvent);
 
 		switch(motionEvent.getAction() & MotionEvent.ACTION_MASK)
 		{
