@@ -59,7 +59,7 @@ public class MorningCardActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences preferences = getSharedPreferences(Constants.TMP_PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(Constants.TMP_PREF_FILE, Context.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("morningTrackDate", mTrackDate);
         editor.commit();

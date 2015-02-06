@@ -76,7 +76,7 @@ public class SystemEventsProber extends BroadcastReceiver {
 			}
 
             String trackDate = new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(new Date());
-            SharedPreferences preferences = mContext.getSharedPreferences(Constants.TMP_PREF_FILE, Context.MODE_PRIVATE);
+            SharedPreferences preferences = mContext.getSharedPreferences(Constants.TMP_PREF_FILE, Context.MODE_MULTI_PROCESS);
             Calendar cal = Calendar.getInstance();
             if (cal.get(Calendar.HOUR_OF_DAY) >= 8 && cal.get(Calendar.HOUR_OF_DAY) <= 10) {
                 String morningTrackDate = preferences.getString("morningTrackDate", "");
@@ -86,6 +86,7 @@ public class SystemEventsProber extends BroadcastReceiver {
                 }
             } else if (cal.get(Calendar.HOUR_OF_DAY) >= 20) {
                 String eveningTrackDate = preferences.getString("eveningTrackDate", "");
+                //Log.d(Constants.TAG, "EveningTrackDate = " + eveningTrackDate + ", trackDate = " + trackDate);
                 if (!eveningTrackDate.equals(trackDate)) {
                     startEveningNotification();
                 }
