@@ -1,6 +1,7 @@
 package edu.uml.swin.sleepfit.cardview;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -42,6 +43,7 @@ public class DiaryViewHolder extends ViewHolder {
     public Button mSaveButton;
     public String trackDate;
     public CardView mCardView;
+    public Date mCreateTime;
 
 	public DiaryViewHolder(View itemView) {
 		super(itemView);

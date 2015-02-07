@@ -54,6 +54,7 @@ public class SummaryViewHolder extends ViewHolder {
 	public Date mNewWaketime;
 	public Date mOldBedtime;
 	public Date mOldWaketime;
+    public Date mCreateTime;
 	public int mBedtimeSelectedHour;
 	public int mBedtimeSleectedMinute;
 	public int mWaketimeSelectedHour;

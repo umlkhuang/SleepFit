@@ -116,7 +116,7 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.home, menu);
+		//inflater.inflate(R.menu.home, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -152,11 +152,7 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
 				Log.d(Constants.TAG, "=== In onItemClick of history list adapter.");
 
                 String trackDate;
-                if (mCards.get(position).mWakeTime != null) {
-                    trackDate = new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(mCards.get(position).mWakeTime);
-                } else {
-                    trackDate = new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(new Date());
-                }
+                trackDate = new SimpleDateFormat("MM/dd/yyyy", Locale.US).format(mCards.get(position).mCreateTime);
 				Bundle bundle = new Bundle();
 				bundle.putString("trackDate", trackDate);
 				Intent intent = new Intent(mContext, ViewSleepHistoryActivity.class);

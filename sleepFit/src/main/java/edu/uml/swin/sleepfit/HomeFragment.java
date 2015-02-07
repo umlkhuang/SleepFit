@@ -153,6 +153,8 @@ public class HomeFragment extends Fragment implements HttpRequestCallback {
 		} else {
 			this.trackDate = tmpTrackDate;
 		}
+        Log.d(Constants.TAG, "=== In HomeFragment onAttache, trackDate = " + this.trackDate);
+
         mEnableSummaryCard = getArguments().getBoolean("enableSummaryCard", true);
         mEnableDailyCard = getArguments().getBoolean("enableDailyCard", true);
         mEnableLifestyleCards = getArguments().getBoolean("enableLifestyleCards", true);
@@ -246,6 +248,7 @@ public class HomeFragment extends Fragment implements HttpRequestCallback {
 			mNeedPausing = false;
 		}
 
+        // This should be in order! Since we will going to use sleep.createTime in dailylog.
         getSleepInfo();
         getDailyLogInfo();
         getAllCards();
@@ -351,7 +354,7 @@ public class HomeFragment extends Fragment implements HttpRequestCallback {
         if (mDailyLogList != null && mDailyLogList.size() > 0) {
             mTodayDailyLog = mDailyLogList.get(mDailyLogList.size() - 1);
         } else {
-            mTodayDailyLog = new DailyLog(System.currentTimeMillis());
+            mTodayDailyLog = new DailyLog(mSleepLog.getCreateTime().getTime());
             try {
                 mDailyLogDao.create(mTodayDailyLog);
             } catch (SQLException e) {

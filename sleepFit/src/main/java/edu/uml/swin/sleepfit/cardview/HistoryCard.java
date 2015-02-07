@@ -11,6 +11,7 @@ public class HistoryCard {
 
 	public Date mSleepTime;
 	public Date mWakeTime;
+    public Date mCreateTime;
 	public String mSleepTimeStr;
 	public String mWakeTimeStr;
 	public String mDurationStr;
@@ -25,6 +26,7 @@ public class HistoryCard {
 		
 		mSleepTime = sleepLog.getSleepTime();
 		mWakeTime = sleepLog.getWakeupTime();
+        mCreateTime = sleepLog.getCreateTime();
 		
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd HH:mm", Locale.US);
         if (mSleepTime != null) {
@@ -37,7 +39,7 @@ public class HistoryCard {
             mDate = new SimpleDateFormat("MMM. dd, yyyy", Locale.US).format(mWakeTime);
         } else {
             mWakeTimeStr = "N/A";
-            mDate = new SimpleDateFormat("MMM. dd, yyyy", Locale.US).format(new Date());
+            mDate = new SimpleDateFormat("MMM. dd, yyyy", Locale.US).format(mCreateTime);
         }
 
         if (mSleepTime != null && mWakeTime != null) {

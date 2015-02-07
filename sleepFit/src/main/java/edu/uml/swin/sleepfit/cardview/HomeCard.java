@@ -44,6 +44,7 @@ public class HomeCard {
     public String mTrackDate;
 
     public boolean mVisable;
+    public Date mCreateTime;
 	
 	public HomeCard(Context context, LifestyleRaw lifestyleRaw) {
 		mContext = context;
@@ -63,6 +64,7 @@ public class HomeCard {
 	public HomeCard(Context context, DailyLog dailyLog, SleepLogger sleepLog) {
 		mContext = context;
         mVisable = true;
+        mCreateTime = sleepLog.getCreateTime();
 		
 		mStressRate = dailyLog.getStress();
 		mDepressionRate = dailyLog.getDepression();
@@ -79,6 +81,7 @@ public class HomeCard {
 	public HomeCard(Context context, SleepLogger sleepLog, DailyLog dailyLog) {
 		mContext = context;
         mVisable = true;
+        mCreateTime = sleepLog.getCreateTime();
 		
 		if (sleepLog == null) {
 			mBedtimeStr = "N/A";
@@ -88,6 +91,7 @@ public class HomeCard {
             Calendar cal = Calendar.getInstance();
             mSleepTime = sleepLog.getSleepTime();
             if (mSleepTime == null) {
+                cal.setTime(sleepLog.getCreateTime());
                 cal.set(Calendar.HOUR_OF_DAY, 0);
                 cal.set(Calendar.MINUTE, 0);
                 mSleepTime = cal.getTime();

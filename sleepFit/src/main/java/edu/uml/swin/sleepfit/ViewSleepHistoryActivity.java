@@ -26,9 +26,12 @@ public class ViewSleepHistoryActivity extends ActionBarActivity {
 		Intent intent = getIntent();
 		mTrackDate = intent.getStringExtra("trackDate");
 		if (mTrackDate == null || mTrackDate.equals("")) {
+            Log.d(Constants.TAG, "In onCreate of ViewSleepHistoryActivity, the trackDate is not available!");
+
 			SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 			mTrackDate = dateFormatter.format(new Date(System.currentTimeMillis()));
 		}
+        Log.d(Constants.TAG, "=== In onCreate of ViewSleepHistoryActivity, the trackDate = " + mTrackDate);
 		
 		if (savedInstanceState == null) {
 			Log.d(Constants.TAG, "In onCreate of ViewSleepHistoryActivity");

@@ -47,6 +47,8 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return;
             }
 
+            ((SummaryViewHolder) viewHolder).mCreateTime = card.mCreateTime;
+
 			((SummaryViewHolder) viewHolder).mBedtimeText.setText(card.mBedtimeStr);
 			((SummaryViewHolder) viewHolder).mOldBedtimeStr = card.mBedtimeStr;
 			//((SummaryViewHolder) viewHolder).mBedtimeText.setEnabled(false);
@@ -67,7 +69,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 			if (((SummaryViewHolder) viewHolder).mOldBedtime != null) {
 				cal1.setTime(((SummaryViewHolder) viewHolder).mOldBedtime);
 			} else {
-				cal1.setTimeInMillis(System.currentTimeMillis());
+				cal1.setTime(card.mCreateTime);
 			}
 			bedtimeHour = cal1.get(Calendar.HOUR_OF_DAY);
 			bedtimeMin  = cal1.get(Calendar.MINUTE);
@@ -78,7 +80,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 			if (((SummaryViewHolder) viewHolder).mOldWaketime != null) {
 				cal2.setTime(((SummaryViewHolder) viewHolder).mOldWaketime);
 			} else {
-				cal2.setTimeInMillis(System.currentTimeMillis());
+				cal2.setTime(card.mCreateTime);
 			}
 			waketimeHour = cal2.get(Calendar.HOUR_OF_DAY);
 			waketimeMin  = cal2.get(Calendar.MINUTE);
@@ -168,6 +170,8 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ((DiaryViewHolder) viewHolder).mCardView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
                 return;
             }
+
+            ((DiaryViewHolder) viewHolder).mCreateTime = card.mCreateTime;
 
             if (card.mNapTime > 0) {
                 ((DiaryViewHolder) viewHolder).mNapTimeText.setText(String.valueOf(card.mNapTime));
