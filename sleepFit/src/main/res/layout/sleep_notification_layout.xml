@@ -14,7 +14,8 @@
             android:layout_height="60dp"
             android:id="@+id/imageView"
             android:src="@drawable/ic_launcher"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:contentDescription="sleep Icon" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -26,8 +27,37 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <ProgressBar
+                    android:id="@+id/positive_sleep_debt_progressbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/green_sleepdebt_progressbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:indeterminate="false"
+                    android:progress="10"
+                    android:layout_marginTop="2dp" />
+
+                <ProgressBar
+                    android:id="@+id/negative_sleep_debt_progressbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/red_sleepdebt_progressbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:indeterminate="false"
+                    android:progress="67"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent">
+                android:background="@android:color/transparent"
+                android:layout_marginTop="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -87,7 +117,8 @@
                 android:id="@+id/noti_info_title"
                 android:layout_marginTop="3dp"
                 android:background="@android:color/transparent"
-                android:textColor="#ff444444" />
+                android:textColor="#ff444444"
+                android:visibility="gone" />
 
         </LinearLayout>
 

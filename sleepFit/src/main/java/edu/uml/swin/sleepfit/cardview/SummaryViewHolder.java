@@ -73,9 +73,6 @@ public class SummaryViewHolder extends ViewHolder {
     public Button mSaveNormalButton;
     public CardView mCardView;
 
-	private static float MAX_ABS_SLEEP_DEBT = 8;
-	private static int DAYS_NEEDED_FOR_SLEEP_DEBT = 7;
-
 	public SummaryViewHolder(View itemView) {
 		super(itemView);
 		mContext = itemView.getContext();
@@ -286,7 +283,7 @@ public class SummaryViewHolder extends ViewHolder {
         if (mNewWaketime != null) {
             calStart.setTime(mNewWaketime);
         }
-		calStart.add(Calendar.DAY_OF_YEAR, -1 * (DAYS_NEEDED_FOR_SLEEP_DEBT - 1));
+		calStart.add(Calendar.DAY_OF_YEAR, -1 * (Constants.DAYS_NEEDED_FOR_SLEEP_DEBT - 1));
 		calStart.set(Calendar.HOUR_OF_DAY, 1);
 		
 		List<SleepLogger> sleeps = null;
@@ -318,10 +315,10 @@ public class SummaryViewHolder extends ViewHolder {
 	public void updateSleepDebt() {
 		float absSleepDebt = Math.abs(mSleepDebt);
 		float portion;
-		if (absSleepDebt >= MAX_ABS_SLEEP_DEBT) {
+		if (absSleepDebt >= Constants.MAX_ABS_SLEEP_DEBT) {
 			portion = 1;
 		} else {
-			portion = Math.abs(mSleepDebt) / MAX_ABS_SLEEP_DEBT;
+			portion = Math.abs(mSleepDebt) / Constants.MAX_ABS_SLEEP_DEBT;
 		}
 		//String sleepDebtStr = String.format("%.2f", mSleepDebt) + " Hours";
 		//mSleepDebtStr = sleepDebtStr;

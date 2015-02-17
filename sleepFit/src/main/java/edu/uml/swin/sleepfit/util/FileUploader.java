@@ -18,6 +18,9 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
@@ -104,7 +107,10 @@ public class FileUploader extends AsyncTask<Void, Void, Void> {
 		
 		for (String zipFile : zipFiles) {
 			try {
-				HttpClient httpClient = new DefaultHttpClient();
+                HttpParams paramConf = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(paramConf, 5 * 1000);
+                HttpConnectionParams.setSoTimeout(paramConf, 10 * 1000);
+                HttpClient httpClient = new DefaultHttpClient(paramConf);
 				HttpPost httpPost = new HttpPost(Constants.POST_FILE_URL);
 				File file = new File(DB_PATH + zipFile);
 				// Check if the database has already been created 

@@ -13,8 +13,12 @@ import java.util.List;
 import java.util.Locale;
 
 import com.androidplot.ui.AnchorPosition;
+import com.androidplot.ui.DynamicTableModel;
+import com.androidplot.ui.PositionMetrics;
 import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -22,6 +26,7 @@ import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.PointLabeler;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
+import com.androidplot.xy.XYStepMode;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -32,10 +37,14 @@ import edu.uml.swin.sleepfit.graphplot.MultitouchPlot;
 import edu.uml.swin.sleepfit.util.Constants;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,6 +72,18 @@ public class LastNightFragment extends Fragment {
 	private List<String> mTimeLabels;
 	private MultitouchPlot mGraphPlot;
 	private boolean mGraphExisting;
+
+    private XYSeries lightSeries;
+    private XYSeries soundSeries;
+    private XYSeries screenOnSeries;
+    private XYSeries movementSeries;
+    private XYSeries eventsSeries;
+
+    private LineAndPointFormatter lightFormat;
+    private LineAndPointFormatter soundFormat;
+    private LineAndPointFormatter screenOnFormat;
+    private LineAndPointFormatter movementFormat;
+    private BarFormatter eventFormat;
 	
 	public static LastNightFragment newInstance(int sectionNumber) {
 		LastNightFragment fragment = new LastNightFragment();
@@ -223,6 +244,14 @@ public class LastNightFragment extends Fragment {
 		Log.d(Constants.TAG, "In onResume, LastNightFragment");
 		
 		drawGraph();
+
+        SharedPreferences preferences = getActivity().getSharedPreferences(Constants.TMP_PREF_FILE, Context.MODE_MULTI_PROCESS);
+        boolean noGraphTip = preferences.getBoolean("noGraphTip", false);
+        if (!noGraphTip) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            DialogFragment dialog = new GraphViewTipDialogFragment();
+            dialog.show(ft, "graphTip");
+        }
 	}
 	
 	@Override
@@ -249,12 +278,6 @@ public class LastNightFragment extends Fragment {
 	private void drawGraph() {
 		if (mGraphExisting) return;
 		
-		XYSeries lightSeries;
-		XYSeries soundSeries;
-		XYSeries screenOnSeries;
-		XYSeries movementSeries;
-		XYSeries eventsSeries;
-		
 		if (mLightData.size() == 0) {
 			lightSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Light");
 			soundSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Sound");
@@ -269,32 +292,32 @@ public class LastNightFragment extends Fragment {
 			eventsSeries = new SimpleXYSeries(mEvents, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Event");
 		}
 		
-		LineAndPointFormatter lightFormat = new LineAndPointFormatter(Color.rgb(204, 0, 0), null, Color.argb(60, 204, 0, 0), null);
+		lightFormat = new LineAndPointFormatter(Color.rgb(204, 0, 0), null, Color.argb(60, 204, 0, 0), null);
 		mGraphPlot.addSeries(lightSeries, lightFormat);
-		
-		LineAndPointFormatter soundFormat = new LineAndPointFormatter(Color.rgb(0, 128, 0), null, Color.argb(60, 0, 128, 0), null);
+
+        soundFormat = new LineAndPointFormatter(Color.rgb(0, 128, 0), null, Color.argb(60, 0, 128, 0), null);
 		mGraphPlot.addSeries(soundSeries, soundFormat);
 		
-		LineAndPointFormatter screenOnFormat = new LineAndPointFormatter(Color.rgb(0, 0, 204), null, Color.argb(60, 0, 0, 204), null);
+		screenOnFormat = new LineAndPointFormatter(Color.rgb(0, 0, 204), null, Color.argb(60, 0, 0, 204), null);
 		mGraphPlot.addSeries(screenOnSeries, screenOnFormat);
 		
-		LineAndPointFormatter movementFormat = new LineAndPointFormatter(Color.rgb(255, 215, 0), null, Color.argb(60, 255, 215, 0), null);
+		movementFormat = new LineAndPointFormatter(Color.rgb(255, 215, 0), null, Color.argb(60, 255, 215, 0), null);
 		mGraphPlot.addSeries(movementSeries, movementFormat);
-		
-		BarFormatter eventFormat = new BarFormatter(Color.DKGRAY, Color.BLACK);
-		PointLabelFormatter plf = new PointLabelFormatter();
-		plf.getTextPaint().setTextSize(16);
-		plf.getTextPaint().setColor(Color.BLACK);
-		plf.getTextPaint().setAlpha(180);
-		eventFormat.setPointLabelFormatter(plf);
-		eventFormat.setPointLabeler(new PointLabeler() {
-			@Override
-			public String getLabel(XYSeries series, int index) {
-				if ((Float) series.getY(index) == 0f) return "";
-				else return mTimeLabels.get(index);
-			}
-		});
-		mGraphPlot.addSeries(eventsSeries, eventFormat);
+
+        eventFormat = new BarFormatter(Color.DKGRAY, Color.BLACK);
+        PointLabelFormatter plf = new PointLabelFormatter();
+        plf.getTextPaint().setTextSize(16);
+        plf.getTextPaint().setColor(Color.BLACK);
+        plf.getTextPaint().setAlpha(180);
+        eventFormat.setPointLabelFormatter(plf);
+        eventFormat.setPointLabeler(new PointLabeler() {
+            @Override
+            public String getLabel(XYSeries series, int index) {
+                if ((Float) series.getY(index) == 0f) return "";
+                else return mTimeLabels.get(index);
+            }
+        });
+        mGraphPlot.addSeries(eventsSeries, eventFormat);
 		
 		mGraphPlot.setTicksPerRangeLabel(1);
 		mGraphPlot.setTitle("Contextual Sensing Data");
@@ -303,6 +326,8 @@ public class LastNightFragment extends Fragment {
 		mGraphPlot.getGraphWidget().setDomainLabelHorizontalOffset(-10);
 		mGraphPlot.getGraphWidget().getRangeGridLinePaint().setColor(Color.TRANSPARENT);
 		mGraphPlot.setRangeBoundaries(0, 1.125, BoundaryMode.FIXED);
+        mGraphPlot.setDomainBoundaries(0, Math.min(11, mLightData.size()-1), BoundaryMode.FIXED);
+        mGraphPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
 		mGraphPlot.setDomainValueFormat(new Format() {
 			private static final long serialVersionUID = 1L;
 			@Override
@@ -316,14 +341,10 @@ public class LastNightFragment extends Fragment {
 				return null;
 			}
 		});
-		
-		mGraphPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, 700, SizeLayoutType.ABSOLUTE));
-		mGraphPlot.getLegendWidget().setAnchor(AnchorPosition.RIGHT_BOTTOM);
-		mGraphPlot.getLegendWidget().setMarginBottom(2);
-		mGraphPlot.getLegendWidget().setPaddingRight(-150);
-		mGraphPlot.getLegendWidget().setPaddingLeft(100);
-		//mGraphPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-		mGraphPlot.setMarkupEnabled(false);
+
+        mGraphPlot.getLegendWidget().setTableModel(new DynamicTableModel(4, 1));
+        mGraphPlot.getLegendWidget().setSize(new SizeMetrics(40, SizeLayoutType.ABSOLUTE, 0.95f, SizeLayoutType.RELATIVE));
+        mGraphPlot.getLegendWidget().setPositionMetrics(new PositionMetrics(35, XLayoutStyle.ABSOLUTE_FROM_LEFT, -2, YLayoutStyle.ABSOLUTE_FROM_BOTTOM, AnchorPosition.LEFT_BOTTOM));
 		mGraphExisting = true;
 	}
 	
@@ -333,8 +354,30 @@ public class LastNightFragment extends Fragment {
 		
 		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			((ActionBarActivity) getActivity()).getSupportActionBar().hide();
+
+            mGraphPlot.clear();
+            mGraphPlot.setDomainBoundaries(0, Math.min(23, mLightData.size()-1), BoundaryMode.FIXED);
+            mGraphPlot.setRangeBoundaries(0, 1.125, BoundaryMode.FIXED);
+            mGraphPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
+            mGraphPlot.addSeries(lightSeries, lightFormat);
+            mGraphPlot.addSeries(soundSeries, soundFormat);
+            mGraphPlot.addSeries(screenOnSeries, screenOnFormat);
+            mGraphPlot.addSeries(movementSeries, movementFormat);
+            mGraphPlot.addSeries(eventsSeries, eventFormat);
+            mGraphPlot.redraw();
 		} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 			((ActionBarActivity) getActivity()).getSupportActionBar().show();
+
+            mGraphPlot.clear();
+            mGraphPlot.setDomainBoundaries(0, Math.min(11, mLightData.size()-1), BoundaryMode.FIXED);
+            mGraphPlot.setRangeBoundaries(0, 1.125, BoundaryMode.FIXED);
+            mGraphPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
+            mGraphPlot.addSeries(lightSeries, lightFormat);
+            mGraphPlot.addSeries(soundSeries, soundFormat);
+            mGraphPlot.addSeries(screenOnSeries, screenOnFormat);
+            mGraphPlot.addSeries(movementSeries, movementFormat);
+            mGraphPlot.addSeries(eventsSeries, eventFormat);
+            mGraphPlot.redraw();
 		}
 	}
 	

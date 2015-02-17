@@ -312,7 +312,7 @@ public class LifestyleDetailViewFragment extends Fragment implements AdapterView
 		
 		mLifestylePosition = mLifestyleSpinner.getSelectedItemPosition();
 		mSelectionPosition = mSelectionSpinner.getSelectedItemPosition();
-		mLifestyleTipText.setText(mTips[mLifestylePosition]);
+		//mLifestyleTipText.setText(mTips[mLifestylePosition]);
 		Log.d(Constants.TAG, "Selected lifestyle position: " + mLifestylePosition + ", selection position: " + mSelectionPosition);
 	}
 

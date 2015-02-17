@@ -22,15 +22,22 @@ import edu.uml.swin.sleepfit.cardview.HistoryListAdapter;
 import edu.uml.swin.sleepfit.cardview.HistoryListAdapter.OnItemClickListener;
 import edu.uml.swin.sleepfit.util.Constants;
 import edu.uml.swin.sleepfit.util.HttpRequestTask;
+import edu.uml.swin.sleepfit.util.SurveyUploader;
 import edu.uml.swin.sleepfit.util.SyncWorker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,10 +56,11 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SleepHistoryFragment extends Fragment implements HttpRequestTask.HttpRequestCallback {
+public class SleepHistoryFragment extends Fragment implements HttpRequestTask.HttpRequestCallback,
+        ConfigSleepTimeDialogFragment.ConfigSleepTimeListener {
 
 	private static final String ARG_SECTION_NUMBER = "section_number";
-	
+
 	private TextView mEmptyText;
 	private RecyclerView mRecyclerView;
 	private HistoryListAdapter mAdapter;
@@ -111,12 +119,12 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
 			Log.e(Constants.TAG, "Cannot get the SleepLogger DAO: " + e.toString());
 			e.printStackTrace();
 		}
-
 	}
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		//inflater.inflate(R.menu.home, menu);
+        inflater.inflate(R.menu.sleep_history, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -171,6 +179,8 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
 
 
     private void getAllSleepHistory() {
+        Log.d(Constants.TAG, "+++ In getAllSleepHistory of SleepHistoryFragment!");
+
         mSleepLogList = null;
         if (mSleepLogDao != null) {
             QueryBuilder<SleepLogger, Integer> qb = mSleepLogDao.queryBuilder();
@@ -201,20 +211,39 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
                     latestSleep.getWakeupTime() == null || !latestSleep.getFinished()) {
                 new SyncWorker(mContext, System.currentTimeMillis()).execute();
 
-                mPausingDialog = ProgressDialog.show(getActivity(), "", "Getting data from server ...", true);
                 String getSleepUrl = Constants.GET_SLEEP_URL + "?accessCode=" + Constants.getAccessCode(mContext) + "&trackDate=" + trackDate;
 
                 if (!mHasGotDataFromServer) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(System.currentTimeMillis());
-                    if (cal.get(Calendar.HOUR_OF_DAY) >= 6 && cal.get(Calendar.HOUR_OF_DAY) <= 10) {
+                    if (cal.get(Calendar.HOUR_OF_DAY) >= 6) {
+                        Log.d(Constants.TAG, "SleepHistoryFragment, need to get sleep time from server.");
+                        mPausingDialog = ProgressDialog.show(getActivity(), "", "Getting data from server ...", true);
                         new HttpRequestTask(mContext, this).execute(getSleepUrl);
+                    } else {
+                        Log.d(Constants.TAG, "Not the right time to get sleep data from server.");
+                        if (!latestSleep.getTrackDate().equals(trackDate)) {
+                            SleepLogger sleepLog = new SleepLogger(System.currentTimeMillis(), trackDate, null, null, 0, 0, false, false);
+                            mCards.add(new HistoryCard(sleepLog, wakeSleepRatio));
+                            // Save this fake sleep into the database
+                            try {
+                                mSleepLogDao.create(sleepLog);
+                            } catch (SQLException e) {
+                                Log.e(Constants.TAG, e.toString());
+                                e.printStackTrace();
+                            }
+                            Intent msg = new Intent(Constants.UPDATED_SLEEP_INFO);
+                            mContext.sendBroadcast(msg);
+                        }
+                        for (SleepLogger log : mSleepLogList) {
+                            mCards.add(new HistoryCard(log, wakeSleepRatio));
+                        }
                     }
                 } else {
+                    Log.d(Constants.TAG, "Already got sleep time from server.");
                     for (SleepLogger log : mSleepLogList) {
                         mCards.add(new HistoryCard(log, wakeSleepRatio));
                     }
-                    mPausingDialog.dismiss();
                 }
 
             } else {
@@ -308,6 +337,8 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
                 Log.d(Constants.TAG, "Add new sleeplogger data record failed: " + e.toString());
                 e.printStackTrace();
             }
+            Intent msg = new Intent(Constants.UPDATED_SLEEP_INFO);
+            mContext.sendBroadcast(msg);
         }
 
         mPausingDialog.dismiss();
@@ -321,6 +352,11 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
         Bundle bundle = new Bundle();
 
         switch (item.getItemId()) {
+            case R.id.action_change_sleep_time:
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                DialogFragment dialog = new ConfigSleepTimeDialogFragment(this);
+                dialog.show(ft, "ConfigSleepTime");
+                return true;
             case R.id.home_action_morning_card:
                 bundle.putString("trackDate", trackDate);
                 Intent intent1 = new Intent(mContext, MorningCardActivity.class);
@@ -347,5 +383,17 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onConfigSleepTimeFinished(float hours) {
+        SharedPreferences preferences = mContext.getSharedPreferences(Constants.SURVEY_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("sleepHours", String.valueOf(hours));
+        editor.commit();
+
+        Intent msg = new Intent(Constants.UPDATED_SLEEP_INFO);
+        mContext.sendBroadcast(msg);
+        onResume();
     }
 }

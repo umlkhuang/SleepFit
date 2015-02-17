@@ -8,6 +8,9 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
@@ -52,8 +55,10 @@ public class SurveyUploader extends AsyncTask<Void, Void, Void> {
 		racial = preferences.getString("racial", "");
 		sleepHours = preferences.getString("sleepHours", ""); 
 
-		HttpClient httpClient = new DefaultHttpClient();
-		httpClient.getParams().setParameter("http.socket.timeout", 10 * 1000);
+        HttpParams paramConf = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(paramConf, 5 * 1000);
+        HttpConnectionParams.setSoTimeout(paramConf, 10 * 1000);
+        HttpClient httpClient = new DefaultHttpClient(paramConf);
 		HttpResponse httpResponse = null;
 		try {
 			HttpPost httpPost = new HttpPost(Constants.POST_SURVEY_URL);

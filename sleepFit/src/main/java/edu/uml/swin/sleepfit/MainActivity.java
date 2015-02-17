@@ -49,8 +49,8 @@ public class MainActivity extends ActionBarActivity implements
 	private GraphsFragment mGraphsFragment;
 	private SleepHistoryFragment mSleepHistoryFragment;
 	private PlaceholderFragment mPlaceholderFragment;
-	
-	class PopupSurveyDialogFragment extends DialogFragment {
+
+	public static class PopupSurveyDialogFragment extends DialogFragment {
 		@Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity implements
 				(DrawerLayout) findViewById(R.id.drawer_layout));
 		
 		startService(new Intent(this, SensingService.class));
-		
+
 		SharedPreferences preferences = getSharedPreferences(Constants.SURVEY_FILE_NAME, Context.MODE_PRIVATE);
 		boolean hasDoneSurvey = preferences.getBoolean("doneSurvey", false);
 		if (!hasDoneSurvey) { 
@@ -102,9 +102,6 @@ public class MainActivity extends ActionBarActivity implements
 				uploader.execute(); 
 			}
 		}
-		
-		// Once user open the App, the local data will be uploaded to backend server
-		//new SyncWorker(getBaseContext(), System.currentTimeMillis()).execute();
 	}
 
 	@Override
@@ -117,12 +114,6 @@ public class MainActivity extends ActionBarActivity implements
 		FragmentManager fragmentManager = getSupportFragmentManager(); 
 		switch (position) {
 		case 0:
-            /*
-			if (mHomeFragment == null) mHomeFragment = HomeFragment.newInstance(position + 1);
-			fragmentManager.beginTransaction()
-					.replace(R.id.container, mHomeFragment).commit();
-			break;
-			*/
             if (mSleepHistoryFragment == null) mSleepHistoryFragment = SleepHistoryFragment.newInstance(position + 1);
             fragmentManager.beginTransaction()
                     .replace(R.id.container, mSleepHistoryFragment).commit();

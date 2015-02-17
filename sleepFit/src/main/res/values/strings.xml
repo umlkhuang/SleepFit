@@ -174,5 +174,9 @@
     <string name="title_activity_lifestyle_detail">LifeStyle</string>
     <string name="title_activity_morning_card">MorningCardActivity</string>
     <string name="title_activity_evening_card">EveningCardActivity</string>
+    <string name="config_sleep_time_text">"Please input your expected average sleep time in hours. Default value is 8 hours."</string>
+    <string name="change_sleep_time">"Set Sleep Duration"</string>
+    <string name="view_graphs_tip_text">You can use two fingers to zoom in and zoom out of the graph, and scroll the graph. You can also rotate your phone to landscape view to see more detail of the graph.</string>
+    <string name="never_show_tip_text">Do not show this tip next time</string>
 
 </resources>

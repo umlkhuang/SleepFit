@@ -164,7 +164,7 @@ public class SystemEventsProber extends BroadcastReceiver {
         String text = "Please update your sleep/wake up time and rate your sleep.";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
                 .setContentTitle("How is your sleep last night?")
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher_trans)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setOngoing(true)
@@ -193,7 +193,7 @@ public class SystemEventsProber extends BroadcastReceiver {
         String text = "Please log your nap time and rate your day.";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
                 .setContentTitle("How do you feel today?")
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher_trans)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setOngoing(true)

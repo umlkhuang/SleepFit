@@ -105,6 +105,9 @@ public class Constants {
 	public static final long UPLOAD_DATA_INTERVAL_SMALL = 1 * 60 * 60 * 1000;	// 1 hours
 
     public static final String UPDATED_SLEEP_INFO = "need_to_update_sleep_info";
+
+    public static float MAX_ABS_SLEEP_DEBT = 8;
+    public static int DAYS_NEEDED_FOR_SLEEP_DEBT = 7;
 	
 	public static String getUUID(Context context) {
 		String uuid, serialNo, androidId;

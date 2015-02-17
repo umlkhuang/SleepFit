@@ -325,17 +325,14 @@ public class HomeFragment extends Fragment implements HttpRequestCallback {
             // Need to upload data in case that user clicked notification on the morning
             new SyncWorker(mContext, System.currentTimeMillis()).execute();
 
-            mPausingDialog = ProgressDialog.show(getActivity(), "", "Getting data from server ...", true);
             String getSleepUrl = Constants.GET_SLEEP_URL + "?accessCode=" + Constants.getAccessCode(mContext) + "&trackDate=" + trackDate;
-
             if (!mHasGotDataFromServer) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(System.currentTimeMillis());
                 if (cal.get(Calendar.HOUR_OF_DAY) >= 6 && cal.get(Calendar.HOUR_OF_DAY) <= 10) {
+                    mPausingDialog = ProgressDialog.show(getActivity(), "", "Getting data from server ...", true);
                     new HttpRequestTask(mContext, this).execute(getSleepUrl);
                 }
-            } else {
-                mPausingDialog.dismiss();
             }
         }
 	}

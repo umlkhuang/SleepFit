@@ -19,6 +19,9 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -400,10 +403,12 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			return;
-		} 
-		
-		HttpClient httpClient = new DefaultHttpClient();
-		httpClient.getParams().setParameter("http.socket.timeout", REQUEST_TIMEOUT_SECONDS * 1000);
+		}
+
+        HttpParams paramConf = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(paramConf, REQUEST_TIMEOUT_SECONDS * 1000);
+        HttpConnectionParams.setSoTimeout(paramConf, REQUEST_TIMEOUT_SECONDS * 1500);
+        HttpClient httpClient = new DefaultHttpClient(paramConf);
 		HttpResponse httpResponse = null;
 		try {
 			HttpPost httpPost = new HttpPost(Constants.POST_FILE_URL);

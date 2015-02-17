@@ -15,7 +15,9 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -190,6 +192,14 @@ public class GraphsFragment extends Fragment {
 		Log.d(Constants.TAG, "In Graphs fragment onResume");
 
         drawGraph();
+
+        SharedPreferences preferences = getActivity().getSharedPreferences(Constants.TMP_PREF_FILE, Context.MODE_MULTI_PROCESS);
+        boolean noGraphTip = preferences.getBoolean("noGraphTip", false);
+        if (!noGraphTip) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            DialogFragment dialog = new GraphViewTipDialogFragment();
+            dialog.show(ft, "graphTip");
+        }
 	}
 	
 	@Override
@@ -216,7 +226,7 @@ public class GraphsFragment extends Fragment {
 			mOptionGroup.setVisibility(View.GONE);
 
             mGraph.clear();
-            mGraph.setDomainBoundaries(0, mDurationData.size(), BoundaryMode.AUTO);
+            mGraph.setDomainBoundaries(0, mDurationData.size()-1, BoundaryMode.AUTO);
             if (mGraphOption == 0) {
                 mGraph.setRangeBoundaries(mMinDebt, mMaxDebt, BoundaryMode.FIXED);
                 mGraph.addSeries(mSleepDebt, mDataFormatter);

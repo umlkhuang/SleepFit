@@ -106,7 +106,7 @@ public class UserSurvey extends ActionBarActivity {
 				saveUserSurvey();
 				
 				Intent intent = new Intent(UserSurvey.this, MainActivity.class);
-			    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Reuse the existing instance
+			    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP); // Reuse the existing instance
 			    startActivity(intent);
 			}
 		});

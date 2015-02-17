@@ -1,16 +1,10 @@
 package edu.uml.swin.sleepfit.sensing;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,7 +13,6 @@ import org.json.JSONObject;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
@@ -28,15 +21,12 @@ import edu.uml.swin.sleepfit.DB.SleepLogger;
 import edu.uml.swin.sleepfit.MainActivity;
 import edu.uml.swin.sleepfit.R;
 import edu.uml.swin.sleepfit.util.Constants;
-import edu.uml.swin.sleepfit.util.FileUploader;
 import edu.uml.swin.sleepfit.util.HttpRequestTask;
 import edu.uml.swin.sleepfit.util.HttpRequestTask.HttpRequestCallback;
 import edu.uml.swin.sleepfit.util.SyncWorker;
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -44,17 +34,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiManager.WifiLock;
-import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.view.Gravity;
+import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 public class SensingService extends Service implements HttpRequestCallback{
 
@@ -82,6 +68,7 @@ public class SensingService extends Service implements HttpRequestCallback{
 	private Dao<SleepLogger, Integer> mSleepLogDao;
     private String mSleepTimeStr;
     private String mSleepDebtStr;
+    private float mCumSleepDebt;
 
     private static int NOTIFICATION_ID = 99999;
 	
@@ -204,6 +191,7 @@ public class SensingService extends Service implements HttpRequestCallback{
 
         mSleepTimeStr = "Not available";
         mSleepDebtStr = "Not available";
+        mCumSleepDebt = 0f;
 		
 		/*
 		mNotificationTimer = new CountDownTimer(Constants.REMIND_TO_LOG_MAX_DURATION_SECONDS * 1000, 1 * 1000) {
@@ -329,34 +317,29 @@ public class SensingService extends Service implements HttpRequestCallback{
 	}
 	
 	private void startServiceNotification() {
-        /*
-		Intent resultIntent = new Intent(this, MainActivity.class);
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		// Adds the back stack
-		stackBuilder.addParentStack(MainActivity.class);
-		// Adds the Intent to the top of the stack
-		stackBuilder.addNextIntent(resultIntent); 
-		// Gets a PendingIntent containing the entire back stack
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-		
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
-			.setContentTitle("SleepFit is running")
-			.setContentText("SleepFit sensing service is running.")
-			.setSmallIcon(R.drawable.ic_launcher)
-			.setAutoCancel(false)
-			.setOngoing(true)
-			.setContentIntent(resultPendingIntent);
-		Notification notification = builder.build();
-		notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
-		
-		startForeground(1, notification);
-		*/
-
         // Get the sleep time string and sleep debt string
         getSleepInfo();
+
+        float absSleepDebt = Math.abs(mCumSleepDebt);
+        float portion;
+        if (absSleepDebt >= Constants.MAX_ABS_SLEEP_DEBT) {
+            portion = 1;
+        } else {
+            portion = Math.abs(mCumSleepDebt) / Constants.MAX_ABS_SLEEP_DEBT;
+        }
+
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.sleep_notification_layout);
         remoteViews.setTextViewText(R.id.noti_sleeptime, mSleepTimeStr);
         remoteViews.setTextViewText(R.id.noti_sleepdebt, mSleepDebtStr);
+        if (mCumSleepDebt < 0) {
+            remoteViews.setViewVisibility(R.id.positive_sleep_debt_progressbar, View.GONE);
+            remoteViews.setViewVisibility(R.id.negative_sleep_debt_progressbar, View.VISIBLE);
+            remoteViews.setProgressBar(R.id.negative_sleep_debt_progressbar, 100, (int) (portion * 100), false);
+        } else {
+            remoteViews.setViewVisibility(R.id.negative_sleep_debt_progressbar, View.GONE);
+            remoteViews.setViewVisibility(R.id.positive_sleep_debt_progressbar, View.VISIBLE);
+            remoteViews.setProgressBar(R.id.positive_sleep_debt_progressbar, 100, (int) (portion * 100), false);
+        }
         Log.d(Constants.TAG, "SleepTime Str = " + mSleepTimeStr + ", SleepDebt Str = " + mSleepDebtStr);
 
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -382,7 +365,7 @@ public class SensingService extends Service implements HttpRequestCallback{
         startForeground(NOTIFICATION_ID, notification);
 	}
 	
-	
+	/*
 	private void startRemindLogDailySleepNotification() {
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		Intent resultIntent = new Intent(this, MainActivity.class);
@@ -436,6 +419,7 @@ public class SensingService extends Service implements HttpRequestCallback{
 	    inStream.close();
 	    outStream.close();
 	}
+	*/
 
 	@Override
 	public void onRequestTaskCompleted(String json) {
@@ -495,6 +479,7 @@ public class SensingService extends Service implements HttpRequestCallback{
                         Log.d(Constants.TAG, "Add new sleeplogger data record failed: " + e.toString());
                         e.printStackTrace();
                     }
+                    startServiceNotification();
                 }
 			} catch (JSONException e) {
 				Log.e(Constants.TAG, e.toString());
@@ -505,29 +490,39 @@ public class SensingService extends Service implements HttpRequestCallback{
 	}
 
     private void getSleepInfo() {
+        float wakeSleepRatio;
+        SharedPreferences preferences = getSharedPreferences(Constants.SURVEY_FILE_NAME, Context.MODE_MULTI_PROCESS);
+        float sleepHours = Float.valueOf(preferences.getString("sleepHours", "8"));
+        wakeSleepRatio = (24.0f - sleepHours) / sleepHours;
+
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-        String trackDate = dateFormatter.format(new Date(System.currentTimeMillis()));
+        String trackDate = dateFormatter.format(new Date());
+
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.set(Calendar.HOUR_OF_DAY, 15);
+        Calendar calStart = Calendar.getInstance();
+        calStart.add(Calendar.DAY_OF_YEAR, -1 * (Constants.DAYS_NEEDED_FOR_SLEEP_DEBT - 1));
+        calStart.set(Calendar.HOUR_OF_DAY, 1);
 
         List<SleepLogger> sleeps = null;
         QueryBuilder<SleepLogger, Integer> qb = mSleepLogDao.queryBuilder();
         try {
-            qb.where().eq("trackDate", trackDate);
+            qb.where().ge("wakeupTime", calStart.getTime())
+                    .and().le("wakeupTime", calEnd.getTime());
+            qb.orderBy("id", false);
             sleeps = mSleepLogDao.query(qb.prepare());
         } catch (SQLException e) {
-            e.printStackTrace();
             Log.e(Constants.TAG, e.toString());
         }
+
         if (sleeps != null && sleeps.size() > 0) {
             SleepLogger sleepLog = sleeps.get(0);
-            if (sleepLog.getSleepTime() != null && sleepLog.getWakeupTime() != null) {
+            if (sleepLog.getTrackDate().equals(trackDate) && sleepLog.getSleepTime() != null && sleepLog.getWakeupTime() != null) {
                 SimpleDateFormat formatter = new SimpleDateFormat("MM/dd HH:mm", Locale.US);
                 String sleepTimeStr = formatter.format(sleepLog.getSleepTime());
                 String wakeTimeStr  = formatter.format(sleepLog.getWakeupTime());
                 mSleepTimeStr = sleepTimeStr + " - " + wakeTimeStr;
 
-                SharedPreferences preferences = getSharedPreferences(Constants.SURVEY_FILE_NAME, Context.MODE_PRIVATE);
-                float sleepHours = Float.valueOf(preferences.getString("sleepHours", "8"));
-                float wakeSleepRatio = (float) ((24.0f - sleepHours) / sleepHours);
                 long duration = sleepLog.getWakeupTime().getTime() - sleepLog.getSleepTime().getTime();
                 duration += sleepLog.getNaptime() * 60 * 1000;
                 float sleepTimeHours = (float) duration / 1000 / 60 / 60;
@@ -538,6 +533,18 @@ public class SensingService extends Service implements HttpRequestCallback{
                     mSleepDebtStr = "-" + String.valueOf(sleepDebtMinutes / 60) + " Hours " + String.valueOf(sleepDebtMinutes % 60) + " Minutes";
                 } else {
                     mSleepDebtStr = "+" + String.valueOf(sleepDebtMinutes / 60) + " Hours " + String.valueOf(sleepDebtMinutes % 60) + " Minutes";
+                }
+            }
+
+            mCumSleepDebt = 0f;
+            for (int i = 0; i < sleeps.size(); i++) {
+                SleepLogger sleepi = sleeps.get(i);
+                if (sleepi.getSleepTime() != null && sleepi.getWakeupTime() != null) {
+                    float duration = (float) (sleepi.getWakeupTime().getTime() - sleepi.getSleepTime().getTime()) / 1000 / 60;
+                    duration = (duration + (float) sleepi.getNaptime()) / 60;
+                    float needSleepHours = (24 - duration) / wakeSleepRatio;
+                    float tmpDebt = duration - needSleepHours;
+                    mCumSleepDebt += tmpDebt;
                 }
             }
         }

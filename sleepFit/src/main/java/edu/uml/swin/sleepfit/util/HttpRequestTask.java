@@ -9,6 +9,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,9 +56,11 @@ public class HttpRequestTask extends AsyncTask<String, Void, String> {
 		if (count != 1) {
 			return null;
 		}
-		
-		HttpClient httpClient = new DefaultHttpClient();
-		httpClient.getParams().setParameter("http.socket.timeout", REQUEST_TIMEOUT_SECONDS * 1000);
+
+        HttpParams paramConf = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(paramConf, REQUEST_TIMEOUT_SECONDS * 1000);
+        HttpConnectionParams.setSoTimeout(paramConf, REQUEST_TIMEOUT_SECONDS * 1500);
+        HttpClient httpClient = new DefaultHttpClient(paramConf);
 		HttpResponse httpResponse = null;
 		String url = params[0];
 		try {

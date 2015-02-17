@@ -20,7 +20,7 @@
          androidPlot.graphWidget.gridBackgroundPaint.color="#ffffff"
          androidPlot.graphWidget.marginTop="10dp"
          androidPlot.graphWidget.marginLeft="5dp"
-         androidPlot.graphWidget.marginBottom="25dp"
+         androidPlot.graphWidget.marginBottom="28dp"
          androidPlot.graphWidget.marginRight="0dp"
          androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
          androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp" />
