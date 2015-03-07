@@ -1694,10 +1694,10 @@ containing a value of this type.
         public static final int none=0x7f0c000e;
         public static final int normal=0x7f0c000a;
         public static final int noti_info_title=0x7f0c00ba;
-        public static final int noti_sleepdebt=0x7f0c00b9;
-        public static final int noti_sleepdebt_title=0x7f0c00b8;
-        public static final int noti_sleeptime=0x7f0c00b7;
-        public static final int noti_sleeptime_title=0x7f0c00b6;
+        public static final int noti_sleepdebt=0x7f0c00b7;
+        public static final int noti_sleepdebt_title=0x7f0c00b6;
+        public static final int noti_sleeptime=0x7f0c00b9;
+        public static final int noti_sleeptime_title=0x7f0c00b8;
         public static final int pick_date=0x7f0c006b;
         public static final int pick_time=0x7f0c0077;
         public static final int positive_sleep_debt_progressbar=0x7f0c00b4;

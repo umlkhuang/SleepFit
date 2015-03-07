@@ -75,12 +75,15 @@ public class GraphsFragment extends Fragment {
     private XYSeries mSleepDebt;
     private XYSeries mDuration;
     private XYSeries mZero;
+    private XYSeries mNeedSleep;
     private List<Float> mSleepDebtData;
     private List<Float> mDurationData;
     private List<Float> mZeroData;
+    private List<Float> mNeedSleepData;
     private List<String> mTimeLabels;
     private LineAndPointFormatter mDataFormatter;
     private LineAndPointFormatter mZeroFormatter;
+    private LineAndPointFormatter mNeededSleepHourFormatter;
     private float mMaxDebt;
     private float mMinDebt;
     private float mMaxDuration;
@@ -129,6 +132,7 @@ public class GraphsFragment extends Fragment {
         mSleepDebtData = new ArrayList<Float>();
         mDurationData = new ArrayList<Float>();
         mZeroData = new ArrayList<Float>();
+        mNeedSleepData = new ArrayList<Float>();
         mTimeLabels = new ArrayList<String>();
         getAllSleepHistory();
         processData();
@@ -237,6 +241,7 @@ public class GraphsFragment extends Fragment {
             } else if (mGraphOption == 1) {
                 mGraph.setRangeBoundaries(0f, mMaxDuration, BoundaryMode.FIXED);
                 mGraph.addSeries(mDuration, mDataFormatter);
+                mGraph.addSeries(mNeedSleep, mNeededSleepHourFormatter);
 
                 mGraph.setTitle("Sleep Duration Statistic");
                 mGraph.setRangeLabel("Sleep Duration (hours)");
@@ -259,6 +264,7 @@ public class GraphsFragment extends Fragment {
             } else if (mGraphOption == 1) {
                 mGraph.setRangeBoundaries(0f, mMaxDuration, BoundaryMode.FIXED);
                 mGraph.addSeries(mDuration, mDataFormatter);
+                mGraph.addSeries(mNeedSleep, mNeededSleepHourFormatter);
 
                 mGraph.setTitle("Sleep Duration Statistic");
                 mGraph.setRangeLabel("Sleep Duration (hours)");
@@ -313,6 +319,7 @@ public class GraphsFragment extends Fragment {
                 mSleepDebtData.add(cumDebt);
                 mTimeLabels.add(new SimpleDateFormat("MM/dd", Locale.US).format(sleep.getWakeupTime()));
                 mZeroData.add(0f);
+                mNeedSleepData.add((float) (24.0 / (mWakeSleepRatio + 1.0)));
             }
             Log.d(Constants.TAG, "Duration: " + mDurationData.toString());
             Log.d(Constants.TAG, "Sleep debt: " + mSleepDebtData.toString());
@@ -324,6 +331,8 @@ public class GraphsFragment extends Fragment {
                 mDurationData.add(0f);
                 mZeroData.add(0f);
                 mZeroData.add(0f);
+                mNeedSleepData.add((float) (24.0 / (mWakeSleepRatio + 1.0)));
+                mNeedSleepData.add((float) (24.0 / (mWakeSleepRatio + 1.0)));
                 mMaxDebt = 1f;
                 mMinDebt = 0f;
                 mMaxDuration = 1f;
@@ -339,6 +348,7 @@ public class GraphsFragment extends Fragment {
             mSleepDebt = new SimpleXYSeries(mSleepDebtData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
             mDuration = new SimpleXYSeries(mDurationData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
             mZero = new SimpleXYSeries(mZeroData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
+            mNeedSleep = new SimpleXYSeries(mNeedSleepData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
 
             if (mSleepDebtData != null && mSleepDebtData.size() > 0) {
                 mMaxDebt = Collections.max(mSleepDebtData) + 1.5f;
@@ -356,6 +366,9 @@ public class GraphsFragment extends Fragment {
             mSleepDebt = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
             mDuration = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
             mZero = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
+            mNeedSleepData.add((float) (24.0 / (mWakeSleepRatio + 1.0)));
+            mNeedSleepData.add((float) (24.0 / (mWakeSleepRatio + 1.0)));
+            mNeedSleep = new SimpleXYSeries(mNeedSleepData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
             mMaxDebt = 1f;
             mMinDebt = 0f;
             mMaxDuration = 1f;
@@ -392,6 +405,13 @@ public class GraphsFragment extends Fragment {
             zeroPaint.setPathEffect(new DashPathEffect(new float[] {10, 10}, 0));
             mZeroFormatter.setLinePaint(zeroPaint);
 
+            mNeededSleepHourFormatter = new LineAndPointFormatter(Color.RED, null, null, null);
+            Paint needSleepPaint = mNeededSleepHourFormatter.getLinePaint();
+            needSleepPaint.setStyle(Paint.Style.STROKE);
+            needSleepPaint.setStrokeWidth(4);
+            needSleepPaint.setPathEffect(new DashPathEffect(new float[] {10, 10}, 0));
+            mNeededSleepHourFormatter.setLinePaint(needSleepPaint);
+
             mGraph.setTicksPerRangeLabel(1);
             mGraph.getLayoutManager().remove(mGraph.getLegendWidget());
             mGraph.getLayoutManager().remove(mGraph.getDomainLabelWidget());
@@ -424,6 +444,7 @@ public class GraphsFragment extends Fragment {
             } else if (mGraphOption == 1) {
                 mGraph.setRangeBoundaries(0f, mMaxDuration, BoundaryMode.FIXED);
                 mGraph.addSeries(mDuration, mDataFormatter);
+                mGraph.addSeries(mNeedSleep, mNeededSleepHourFormatter);
 
                 mGraph.setTitle("Sleep Duration Statistic");
                 mGraph.setRangeLabel("Sleep Duration (hours)");
@@ -441,6 +462,7 @@ public class GraphsFragment extends Fragment {
             } else if (mGraphOption == 1) {
                 mGraph.setRangeBoundaries(0f, mMaxDuration, BoundaryMode.FIXED);
                 mGraph.addSeries(mDuration, mDataFormatter);
+                mGraph.addSeries(mNeedSleep, mNeededSleepHourFormatter);
 
                 mGraph.setTitle("Sleep Duration Statistic");
                 mGraph.setRangeLabel("Sleep Duration (hours)");

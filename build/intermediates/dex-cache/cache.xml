@@ -16,13 +16,6 @@
         <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/httpcore-4.3.1-b17e19f297fe1b031dab7082795d2e151f6f81b3.jar" />
     </item>
     <item
-        jar="/home/ke/workspace/SleepFit/sleepFit/libs/achartengine-1.1.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="9932e3fb9fbe54e80873e77f72a99f79e33b3250">
-        <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/achartengine-1.1.0-d7c873fcf468b067a62b83866ac4afa2d429aa5a.jar" />
-    </item>
-    <item
         jar="/home/ke/workspace/SleepFit/sleepFit/libs/androidplot-core-0.6.2.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -54,7 +47,7 @@
         jar="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/exploded-aar/SleepFit/googleDateTimePickers/unspecified/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="c3279ce5984a05bf39ef33f62586c2ef7c37b6ed">
+        sha1="ba9b6634c0d40be3ccf4cc406507f6a97e105b04">
         <dex dex="/home/ke/workspace/SleepFit/sleepFit/build/intermediates/pre-dexed/debug/classes-a938f61b66bcdf7561992825248f46860d0d4559.jar" />
     </item>
     <item

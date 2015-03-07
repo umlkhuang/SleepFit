@@ -277,7 +277,8 @@ public class LastNightFragment extends Fragment {
 	
 	private void drawGraph() {
 		if (mGraphExisting) return;
-		
+
+        /*
 		if (mLightData.size() == 0) {
 			lightSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Light");
 			soundSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Sound");
@@ -291,6 +292,26 @@ public class LastNightFragment extends Fragment {
 			movementSeries = new SimpleXYSeries(mMovement, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Movement");
 			eventsSeries = new SimpleXYSeries(mEvents, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Event");
 		}
+		*/
+
+        if (mLightData.size() == 0) {
+            mLightData.add(0f);
+            mLightData.add(0f);
+            mSoundData.add(0f);
+            mSoundData.add(0f);
+            mScreenOn.add(0f);
+            mScreenOn.add(0f);
+            mMovement.add(0f);
+            mMovement.add(0f);
+            mEvents.add(0f);
+            mEvents.add(0f);
+        }
+        lightSeries = new SimpleXYSeries(mLightData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Light");
+        soundSeries = new SimpleXYSeries(mSoundData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Sound");
+        screenOnSeries = new SimpleXYSeries(mScreenOn, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Screen-On");
+        movementSeries = new SimpleXYSeries(mMovement, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Movement");
+        eventsSeries = new SimpleXYSeries(mEvents, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Event");
+
 		
 		lightFormat = new LineAndPointFormatter(Color.rgb(204, 0, 0), null, Color.argb(60, 204, 0, 0), null);
 		mGraphPlot.addSeries(lightSeries, lightFormat);

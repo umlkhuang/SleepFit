@@ -76,7 +76,7 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 	
 	private File mJsonFile;
 	
-	private static int REQUEST_TIMEOUT_SECONDS = 180;
+	private static int REQUEST_TIMEOUT_SECONDS = 30;
 	
 	public SyncWorker(Context context, long TS) {
 		mContext = context;
@@ -407,7 +407,7 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 
         HttpParams paramConf = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(paramConf, REQUEST_TIMEOUT_SECONDS * 1000);
-        HttpConnectionParams.setSoTimeout(paramConf, REQUEST_TIMEOUT_SECONDS * 1500);
+        HttpConnectionParams.setSoTimeout(paramConf, REQUEST_TIMEOUT_SECONDS * 500);
         HttpClient httpClient = new DefaultHttpClient(paramConf);
 		HttpResponse httpResponse = null;
 		try {

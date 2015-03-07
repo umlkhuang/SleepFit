@@ -523,6 +523,7 @@ public class SensingService extends Service implements HttpRequestCallback{
                 String wakeTimeStr  = formatter.format(sleepLog.getWakeupTime());
                 mSleepTimeStr = sleepTimeStr + " - " + wakeTimeStr;
 
+                /*
                 long duration = sleepLog.getWakeupTime().getTime() - sleepLog.getSleepTime().getTime();
                 duration += sleepLog.getNaptime() * 60 * 1000;
                 float sleepTimeHours = (float) duration / 1000 / 60 / 60;
@@ -534,6 +535,7 @@ public class SensingService extends Service implements HttpRequestCallback{
                 } else {
                     mSleepDebtStr = "+" + String.valueOf(sleepDebtMinutes / 60) + " Hours " + String.valueOf(sleepDebtMinutes % 60) + " Minutes";
                 }
+                */
             }
 
             mCumSleepDebt = 0f;
@@ -546,6 +548,12 @@ public class SensingService extends Service implements HttpRequestCallback{
                     float tmpDebt = duration - needSleepHours;
                     mCumSleepDebt += tmpDebt;
                 }
+            }
+            int sleepDebtMinutes = (int) (Math.abs(mCumSleepDebt) * 60);
+            if (mCumSleepDebt < 0) {
+                mSleepDebtStr = "-" + String.valueOf(sleepDebtMinutes / 60) + " Hours " + String.valueOf(sleepDebtMinutes % 60) + " Minutes";
+            } else {
+                mSleepDebtStr = "+" + String.valueOf(sleepDebtMinutes / 60) + " Hours " + String.valueOf(sleepDebtMinutes % 60) + " Minutes";
             }
         }
     }
