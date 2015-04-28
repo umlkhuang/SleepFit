@@ -2,6 +2,7 @@ package edu.uml.swin.sleepfit;
 
 import edu.uml.swin.sleepfit.DB.DatabaseHelper;
 import edu.uml.swin.sleepfit.DB.SleepLogger;
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.graphplot.MultitouchPlot;
 import edu.uml.swin.sleepfit.graphplot.MyBarRenderer;
 import edu.uml.swin.sleepfit.util.Constants;
@@ -204,6 +205,10 @@ public class GraphsFragment extends Fragment {
             DialogFragment dialog = new GraphViewTipDialogFragment();
             dialog.show(ft, "graphTip");
         }
+
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status", "GraphsFragment|Enter");
+        Constants.addNewUserEvent(mContext, event);
 	}
 	
 	@Override
@@ -272,6 +277,14 @@ public class GraphsFragment extends Fragment {
             mGraph.redraw();
 		}
 	}
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status", "GraphsFragment|Exit");
+        Constants.addNewUserEvent(mContext, event);
+    }
 
     private void getAllSleepHistory() {
         mSleepLogList = null;

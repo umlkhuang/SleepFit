@@ -43,6 +43,8 @@ import edu.uml.swin.sleepfit.DB.SensingData;
 import edu.uml.swin.sleepfit.DB.SleepLogger;
 import edu.uml.swin.sleepfit.DB.SoundRaw;
 import edu.uml.swin.sleepfit.DB.SysEvents;
+import edu.uml.swin.sleepfit.DB.UserEvents;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -63,6 +65,7 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 	private Dao<SysEvents, Integer> mSysEventsDao;
 	private Dao<DailyLog, Integer> mDailyLogDao;
 	private Dao<SleepLogger, Integer> mSleepLoggerDao;
+    private Dao<UserEvents, Integer> mUserEventsDao;
 	
 	private List<LifestyleRaw> lifestyleList = null;
 	private List<LightRaw> lightList = null;
@@ -73,6 +76,7 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 	private List<SysEvents> sysEventList = null;
 	private List<DailyLog> dailyLogList = null;
 	private List<SleepLogger> sleepLogList = null;
+    private List<UserEvents> userEventsList = null;
 	
 	private File mJsonFile;
 	
@@ -104,6 +108,7 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 			mSysEventsDao = mDatabaseHelper.getSysEventsDao();
 			mDailyLogDao = mDatabaseHelper.getDailyLogDao();
 			mSleepLoggerDao = mDatabaseHelper.getSleepLoggerDao();
+            mUserEventsDao = mDatabaseHelper.getUserEventsDao();
 		} catch (SQLException e) {
 			Log.e(Constants.TAG, "Cannot get the DAO: " + e.toString());
 			e.printStackTrace();
@@ -370,6 +375,31 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 				return null;
 			}
 		}
+
+        userEventsList = getUnuploadedUserEventsData();
+        if (userEventsList != null && userEventsList.size() > 0) {
+            JSONArray userEventsJson = new JSONArray();
+            for (UserEvents record : userEventsList) {
+                JSONObject tmp = new JSONObject();
+                try {
+                    tmp.put("id", record.getId());
+                    tmp.put("createTime", dateFormatter.format(record.getCreateTime()));
+                    tmp.put("trackDate", record.getTrackDate());
+                    tmp.put("dataStyle", record.getDataStyle());
+                    tmp.put("data", record.getData());
+                    userEventsJson.put(tmp);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+            try {
+                json.put("userEvents", userEventsJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
 		
 		String jsonStr = json.toString();
 		/*
@@ -431,6 +461,13 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 				setUploadedFlag();
 				Log.d(Constants.TAG, "Sync data succeeded!");
 			} else {
+                // Need to delete the text file!
+                try {
+                    mJsonFile.delete();
+                } catch (Exception e) {
+                    Log.e(Constants.TAG, "Delete JSON file failed: " + e.toString());
+                }
+
 				HttpEntity resEntity = httpResponse.getEntity();
 				String resStr = EntityUtils.toString(resEntity).trim();
 				while (resStr.length() > 1000) {
@@ -549,8 +586,19 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 		} catch (SQLException e) {
 			Log.d(Constants.TAG, "Update sysEvents upload result failed: " + e.toString());
 			e.printStackTrace();
-		} 
-	}
+		}
+
+        try {
+            UpdateBuilder<UserEvents, Integer> updateBuilder = mUserEventsDao.updateBuilder();
+            updateBuilder.where().le("createTime", new Date(mTS))
+                         .and().eq("uploaded", false);
+            updateBuilder.updateColumnValue("uploaded", true);
+            updateBuilder.update();
+        } catch (SQLException e) {
+            Log.d(Constants.TAG, "Update userEvents upload result failed: " + e.toString());
+            e.printStackTrace();
+        }
+    }
 	
 	private List<SleepLogger> getUnuploadedSleepLogData() {
 		List<SleepLogger> retList = null;
@@ -713,4 +761,22 @@ public class SyncWorker extends AsyncTask<Void, Void, Void> {
 		
 		return retList;
 	}
+
+    private List<UserEvents> getUnuploadedUserEventsData() {
+        List<UserEvents> retList = null;
+
+        try {
+            QueryBuilder<UserEvents, Integer> queryBuilder = mUserEventsDao.queryBuilder();
+            queryBuilder.where().eq("uploaded", false)
+                        .and()
+                        .le("createTime", new Date(mTS));
+            PreparedQuery<UserEvents> preparedQuery = queryBuilder.prepare();
+            retList = mUserEventsDao.query(preparedQuery);
+        } catch (SQLException e) {
+            Log.e(Constants.TAG, "Get all unuploaded uservents data failed: " + e.toString());
+            e.printStackTrace();
+        }
+
+        return retList;
+    }
 }

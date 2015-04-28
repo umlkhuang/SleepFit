@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import mirko.android.datetimepicker.time.TimePickerDialog;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -55,6 +56,8 @@ public class SummaryViewHolder extends ViewHolder {
 	public Date mOldBedtime;
 	public Date mOldWaketime;
     public Date mCreateTime;
+    public String mOldqualityRatingText;
+    public String mOldRestoredRatingText;
 	public int mBedtimeSelectedHour;
 	public int mBedtimeSleectedMinute;
 	public int mWaketimeSelectedHour;
@@ -87,6 +90,13 @@ public class SummaryViewHolder extends ViewHolder {
 		mRestoredRating = (RatingBar) itemView.findViewById(R.id.restoredRatingBar); 
 		mSaveButton = (ToggleButton) itemView.findViewById(R.id.saveMorningDiaryToggleButton);
         mSaveNormalButton = (Button) itemView.findViewById(R.id.saveMorningDiaryButton);
+
+        /*
+        mOldBedtimeStr = mBedtimeText.getText().toString();
+        mOldWaketimeStr = mWaketimeText.getText().toString();
+        mOldqualityRatingText =  String.valueOf((int) mQualityRating.getRating());
+        mOldRestoredRatingText = String.valueOf((int) mRestoredRating.getRating());
+        */
 		
 		mDatabaseHelper = OpenHelperManager.getHelper(itemView.getContext(), DatabaseHelper.class);
 		try {
@@ -202,7 +212,41 @@ public class SummaryViewHolder extends ViewHolder {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
+
+                            UserEvents event1 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Bedtime|"+trackDate+"|N/A|"+mBedtimeText.getText().toString());
+                            Log.d(Constants.TAG, "SleepTime: N/A ==> " + mBedtimeText.getText().toString());
+                            Constants.addNewUserEvent(mContext, event1);
+
+                            UserEvents event2 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Waketime|"+trackDate+"|N/A|"+mWaketimeText.getText().toString());
+                            Log.d(Constants.TAG, "WakeTime: N/A ==> " + mWaketimeText.getText().toString());
+                            Constants.addNewUserEvent(mContext, event2);
                         } else {
+                            SimpleDateFormat newFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
+
+                            if (sleeps.get(0).getSleepTime() != null) {
+                                if (!newFormatter.format(sleeps.get(0).getSleepTime()).equals(mBedtimeText.getText().toString())) {
+                                    UserEvents event1 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Bedtime|" + trackDate + "|" + newFormatter.format(sleeps.get(0).getSleepTime()) + "|" + mBedtimeText.getText().toString());
+                                    Log.d(Constants.TAG, newFormatter.format(sleeps.get(0).getSleepTime()) + " ==> " + mBedtimeText.getText().toString());
+                                    Constants.addNewUserEvent(mContext, event1);
+                                } else {
+                                    UserEvents event1 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Bedtime|"+trackDate+"|N/A|"+mBedtimeText.getText().toString());
+                                    Log.d(Constants.TAG, "SleepTime: N/A ==> " + mBedtimeText.getText().toString());
+                                    Constants.addNewUserEvent(mContext, event1);
+                                }
+                            }
+
+                            if (sleeps.get(0).getWakeupTime() != null) {
+                                if (!newFormatter.format(sleeps.get(0).getWakeupTime()).equals(mWaketimeText.getText().toString())) {
+                                    UserEvents event2 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Waketime|" + trackDate + "|" + newFormatter.format(sleeps.get(0).getWakeupTime()) + "|" + mWaketimeText.getText().toString());
+                                    Log.d(Constants.TAG, newFormatter.format(sleeps.get(0).getWakeupTime()) + " ==> " + mWaketimeText.getText().toString());
+                                    Constants.addNewUserEvent(mContext, event2);
+                                } else {
+                                    UserEvents event2 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Waketime|"+trackDate+"|N/A|"+mWaketimeText.getText().toString());
+                                    Log.d(Constants.TAG, "WakeTime: N/A ==> " + mWaketimeText.getText().toString());
+                                    Constants.addNewUserEvent(mContext, event2);
+                                }
+                            }
+
                             try {
                                 UpdateBuilder<SleepLogger, Integer> ub = mSleepLogDao.updateBuilder();
                                 ub.where().eq("trackDate", trackDate);
@@ -226,6 +270,17 @@ public class SummaryViewHolder extends ViewHolder {
                         } catch (SQLException e) {
                             Log.d(Constants.TAG, "Update dailylog failed: " + e.toString());
                             e.printStackTrace();
+                        }
+
+                        if (!mOldqualityRatingText.equals(String.valueOf((int) mQualityRating.getRating()))) {
+                            UserEvents event3 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Quality|" + trackDate + "|" + mOldqualityRatingText + "|" + String.valueOf((int) mQualityRating.getRating()));
+                            Log.d(Constants.TAG, "Quality: " + mOldqualityRatingText + " ==> " + String.valueOf((int) mQualityRating.getRating()));
+                            Constants.addNewUserEvent(mContext, event3);
+                        }
+                        if (!mOldRestoredRatingText.equals(String.valueOf((int) mRestoredRating.getRating()))) {
+                            UserEvents event4 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Restored|" + trackDate + "|" + mOldRestoredRatingText + "|" + String.valueOf((int) mRestoredRating.getRating()));
+                            Log.d(Constants.TAG, "Restored: " + mOldRestoredRatingText + " ==> " + String.valueOf((int) mRestoredRating.getRating()));
+                            Constants.addNewUserEvent(mContext, event4);
                         }
 
                         mBedtimeText.setEnabled(false);

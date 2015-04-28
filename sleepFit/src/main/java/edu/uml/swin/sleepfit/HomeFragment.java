@@ -23,6 +23,7 @@ import edu.uml.swin.sleepfit.DB.DailyLog;
 import edu.uml.swin.sleepfit.DB.DatabaseHelper;
 import edu.uml.swin.sleepfit.DB.LifestyleRaw;
 import edu.uml.swin.sleepfit.DB.SleepLogger;
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.cardview.HomeCard;
 import edu.uml.swin.sleepfit.cardview.HomeListAdapter;
 import edu.uml.swin.sleepfit.fab.FloatingActionButton;
@@ -255,6 +256,10 @@ public class HomeFragment extends Fragment implements HttpRequestCallback {
 		mAdapter = new HomeListAdapter(mCards, getActivity());
 		if (mAdapter != null)
 			mRecyclerView.setAdapter(mAdapter);
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status|trackDate", "HomeFragment|Enter|"+trackDate);
+        Constants.addNewUserEvent(mContext, event);
+
 	}
 	
 	@Override
@@ -269,6 +274,9 @@ public class HomeFragment extends Fragment implements HttpRequestCallback {
 		}
 		
 		mNeedPausing = true;
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status|trackDate", "HomeFragment|Exit|"+trackDate);
+        Constants.addNewUserEvent(mContext, event);
 	}
 
     @Override

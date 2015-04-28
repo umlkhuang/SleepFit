@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.util.Constants;
 
 
@@ -62,8 +63,18 @@ public class EveningCardActivity extends ActionBarActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("eveningTrackDate", mTrackDate);
         editor.commit();
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status|trackDate", "ClickEveningNotification|Enter|"+mTrackDate);
+        Constants.addNewUserEvent(this, event);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status|trackDate", "ClickEveningNotification|Exit|"+mTrackDate);
+        Constants.addNewUserEvent(this, event);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

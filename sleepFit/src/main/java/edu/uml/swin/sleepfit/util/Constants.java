@@ -2,10 +2,18 @@ package edu.uml.swin.sleepfit.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings.Secure;
+import android.util.Log;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+
+import edu.uml.swin.sleepfit.DB.DatabaseHelper;
+import edu.uml.swin.sleepfit.DB.UserEvents;
 
 public class Constants {
 	// Constants definition for the global application 
@@ -138,4 +146,25 @@ public class Constants {
 		*/
 		return Constants.getUUID(context);
 	}
+
+    public static void addNewUserEvent(Context context, UserEvents userEvent) {
+        DatabaseHelper mDatabaseHelper;
+        Dao<UserEvents, Integer> mUserEventsDao = null;
+        mDatabaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+        try {
+            mUserEventsDao = mDatabaseHelper.getUserEventsDao();
+        } catch (SQLException e) {
+            Log.e(Constants.TAG, "Cannot get the UserEvents DAO: " + e.toString());
+            e.printStackTrace();
+        }
+
+        if (mUserEventsDao != null) {
+            try {
+                mUserEventsDao.create(userEvent);
+            } catch (SQLException e) {
+                Log.e(TAG, "Add new user event failed!");
+                e.printStackTrace();
+            }
+        }
+    }
 }

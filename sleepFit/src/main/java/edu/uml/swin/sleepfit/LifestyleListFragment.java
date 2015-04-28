@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.util.Constants;
 
 public class LifestyleListFragment extends Fragment {
@@ -104,5 +105,16 @@ public class LifestyleListFragment extends Fragment {
         });
 
         mRecyclerView.setAdapter(mAdapter);
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status", "LifestyleListFragment|Enter");
+        Constants.addNewUserEvent(mContext, event);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status", "LifestyleListFragment|Exit");
+        Constants.addNewUserEvent(mContext, event);
     }
 }

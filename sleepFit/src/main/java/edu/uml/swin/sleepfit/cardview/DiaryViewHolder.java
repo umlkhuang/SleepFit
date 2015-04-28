@@ -8,6 +8,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import edu.uml.swin.sleepfit.DB.SleepLogger;
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.R;
 import edu.uml.swin.sleepfit.DB.DailyLog;
 import edu.uml.swin.sleepfit.DB.DatabaseHelper;
@@ -45,6 +46,11 @@ public class DiaryViewHolder extends ViewHolder {
     public CardView mCardView;
     public Date mCreateTime;
 
+    public String mOldNapTimeStr;
+    public String mOldStressStr;
+    public String mOldFatigueStr;
+    public String mOldSleepyStr;
+
 	public DiaryViewHolder(View itemView) {
 		super(itemView);
         mContext = itemView.getContext();
@@ -57,6 +63,13 @@ public class DiaryViewHolder extends ViewHolder {
 		mSleepinessRating = (RatingBar) itemView.findViewById(R.id.sleepinessRatingBar);
 		mToggleButton = (ToggleButton) itemView.findViewById(R.id.saveDiaryToggleButton);
         mSaveButton = (Button) itemView.findViewById(R.id.saveDiaryButton);
+
+        /*
+        mOldNapTimeStr = mNapTimeText.getText().toString();
+        mOldStressStr = String.valueOf((int) mStressRating.getRating());
+        mOldFatigueStr = String.valueOf((int) mFatigueRating.getRating());
+        mOldSleepyStr = String.valueOf((int) mSleepinessRating.getRating());
+        */
 
 		mDatabaseHelper = OpenHelperManager.getHelper(itemView.getContext(), DatabaseHelper.class);
 		try {
@@ -147,6 +160,32 @@ public class DiaryViewHolder extends ViewHolder {
 
                         Intent msg = new Intent(Constants.UPDATED_SLEEP_INFO);
                         mContext.sendBroadcast(msg);
+
+                        String newNapTimeStr = mNapTimeText.getText().toString();
+                        String newStressStr = String.valueOf((int) mStressRating.getRating());
+                        String newFatigueStr = String.valueOf((int) mFatigueRating.getRating());
+                        String newSleepyStr = String.valueOf((int) mSleepinessRating.getRating());
+
+                        if (!mOldNapTimeStr.equals(newNapTimeStr)) {
+                            UserEvents event1 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "NapTime|" + trackDate + "|" + mOldNapTimeStr + "|" + newNapTimeStr);
+                            Log.d(Constants.TAG, "NapTime: " + mOldNapTimeStr + " ==> " + newNapTimeStr);
+                            Constants.addNewUserEvent(mContext, event1);
+                        }
+                        if (!mOldStressStr.equals(newStressStr)) {
+                            UserEvents event2 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Stress|" + trackDate + "|" + mOldStressStr + "|" + newStressStr);
+                            Log.d(Constants.TAG, "Stress: " + mOldStressStr + " ==> " + newStressStr);
+                            Constants.addNewUserEvent(mContext, event2);
+                        }
+                        if (!mOldFatigueStr.equals(newFatigueStr)) {
+                            UserEvents event3 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Fatigue|" + trackDate + "|" + mOldFatigueStr + "|" + newFatigueStr);
+                            Log.d(Constants.TAG, "Fatigue: " + mOldFatigueStr + " ==> " + newFatigueStr);
+                            Constants.addNewUserEvent(mContext, event3);
+                        }
+                        if (!mOldSleepyStr.equals(newSleepyStr)) {
+                            UserEvents event4 = new UserEvents(System.currentTimeMillis(), "name|trackDate|from|to", "Sleepy|" + trackDate + "|" + mOldSleepyStr + "|" + newSleepyStr);
+                            Log.d(Constants.TAG, "Sleepy: " + mOldSleepyStr + " ==> " + newSleepyStr);
+                            Constants.addNewUserEvent(mContext, event4);
+                        }
                     }
                 });
 

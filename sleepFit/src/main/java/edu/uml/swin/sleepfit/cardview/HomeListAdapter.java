@@ -60,7 +60,9 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 			//((SummaryViewHolder) viewHolder).mWaketimeText.setEnabled(false);
 			((SummaryViewHolder) viewHolder).mOldWaketime = card.mWakeTime;
 			((SummaryViewHolder) viewHolder).mNewWaketime = card.mWakeTime;
-			
+            ((SummaryViewHolder) viewHolder).mOldqualityRatingText = String.valueOf(card.mQualityRate);
+            ((SummaryViewHolder) viewHolder).mOldRestoredRatingText = String.valueOf(card.mRestoredRate);
+
 			//SimpleDateFormat sleepFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
 			int bedtimeHour, bedtimeMin, waketimeHour, waketimeMin;
 			((SummaryViewHolder) viewHolder).mOldBedtimeStr = card.mBedtimeStr;
@@ -175,21 +177,26 @@ public class HomeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             if (card.mNapTime > 0) {
                 ((DiaryViewHolder) viewHolder).mNapTimeText.setText(String.valueOf(card.mNapTime));
+                ((DiaryViewHolder) viewHolder).mOldNapTimeStr = String.valueOf(card.mNapTime);
             } else {
                 ((DiaryViewHolder) viewHolder).mNapTimeText.setText("0");
+                ((DiaryViewHolder) viewHolder).mOldNapTimeStr = "0";
             }
 
 			((DiaryViewHolder) viewHolder).mStressRating.setRating(card.mStressRate);
 			//((DiaryViewHolder) viewHolder).mStressRating.setIsIndicator(true);
+            ((DiaryViewHolder) viewHolder).mOldStressStr = String.valueOf(card.mSleepinessRate);
 			
 			((DiaryViewHolder) viewHolder).mDepressionRating.setRating(card.mDepressionRate);
 			//((DiaryViewHolder) viewHolder).mDepressionRating.setIsIndicator(true);
 			
 			((DiaryViewHolder) viewHolder).mFatigueRating.setRating(card.mFatigueRate);
 			//((DiaryViewHolder) viewHolder).mFatigueRating.setIsIndicator(true);
+            ((DiaryViewHolder) viewHolder).mOldFatigueStr = String.valueOf(card.mFatigueRate);
 			
 			((DiaryViewHolder) viewHolder).mSleepinessRating.setRating(card.mSleepinessRate);
 			//((DiaryViewHolder) viewHolder).mSleepinessRating.setIsIndicator(true);
+            ((DiaryViewHolder) viewHolder).mOldSleepyStr = String.valueOf(card.mSleepinessRate);
 			
 			//((DiaryViewHolder) viewHolder).mToggleButton.setChecked(false);
             ((DiaryViewHolder) viewHolder).trackDate = card.mTrackDate;

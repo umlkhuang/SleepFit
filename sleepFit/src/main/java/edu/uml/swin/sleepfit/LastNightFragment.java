@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,6 +34,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 import edu.uml.swin.sleepfit.DB.DatabaseHelper;
 import edu.uml.swin.sleepfit.DB.SensingData;
+import edu.uml.swin.sleepfit.DB.SleepLogger;
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.graphplot.MultitouchPlot;
 import edu.uml.swin.sleepfit.util.Constants;
 import android.app.Activity;
@@ -61,6 +64,7 @@ public class LastNightFragment extends Fragment {
 	private Context mContext;
 	private DatabaseHelper mDatabaseHelper;
 	private Dao<SensingData, Integer> mSensingDataDao;
+    private Dao<SleepLogger, Integer> mSleepLoggerDao;
 	private List<SensingData> mSensingDataList = null;
 	private Calendar mStartTS;
 	private Calendar mEndTS;
@@ -72,6 +76,9 @@ public class LastNightFragment extends Fragment {
 	private List<String> mTimeLabels;
 	private MultitouchPlot mGraphPlot;
 	private boolean mGraphExisting;
+    private SleepLogger mSleepLog;
+    int mSleepIdx = -1;
+    int mWakeIdx = -1;
 
     private XYSeries lightSeries;
     private XYSeries soundSeries;
@@ -135,14 +142,37 @@ public class LastNightFragment extends Fragment {
 		mEvents = new ArrayList<Float>();
 		mTimeLabels = new ArrayList<String>();
 		mGraphExisting = false;
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        String trackDate = dateFormatter.format(new Date(System.currentTimeMillis()));
 		
 		mDatabaseHelper = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class);
 		try {
 			mSensingDataDao = mDatabaseHelper.getSensingDataDao();
+            mSleepLoggerDao = mDatabaseHelper.getSleepLoggerDao();
+
 			QueryBuilder<SensingData, Integer> qb = mSensingDataDao.queryBuilder();
 			qb.where().ge("createTime", mStartTS.getTime())
 					.and().le("createTime", mEndTS.getTime());
 			mSensingDataList = mSensingDataDao.query(qb.prepare());
+
+            List<SleepLogger> mSleepLogList = null;
+            if (mSleepLoggerDao != null) {
+                QueryBuilder<SleepLogger, Integer> sqb = mSleepLoggerDao.queryBuilder();
+                try {
+                    sqb.where().eq("trackDate", trackDate);
+                    sqb.orderBy("id", false);
+                    mSleepLogList = mSleepLoggerDao.query(sqb.prepare());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    Log.e(Constants.TAG, e.toString());
+                }
+            }
+            if (mSleepLogList != null && mSleepLogList.size() > 0) {
+                mSleepLog = mSleepLogList.get(0);
+            } else {
+                mSleepLog = null;
+            }
 		} catch (SQLException e) {
 			Log.e(Constants.TAG, "Cannot get the SensingData DAO: " + e.toString());
 			e.printStackTrace();
@@ -182,6 +212,41 @@ public class LastNightFragment extends Fragment {
 						mEvents.add(0f);
 					}
 				}
+
+                if (mSleepLog != null) {
+                    Date sleepTime = mSleepLog.getSleepTime(), wakeupTime = mSleepLog.getWakeupTime();
+                    if (mSleepIdx < 0 && sleepTime != null) {
+                        long delta1 = Math.abs(sleepTime.getTime() - data.getCreateTime().getTime()) / 1000;
+                        if (delta1 <= 300) {
+                            if (i < len - 1) {
+                                long delta2 = Math.abs(sleepTime.getTime() - mSensingDataList.get(i+1).getCreateTime().getTime()) / 1000;
+                                if (delta1 < delta2) {
+                                    mSleepIdx = i;
+                                    mEvents.set(i, 1.06f);
+                                }
+                            } else {
+                                mSleepIdx = i;
+                                mEvents.set(i, 1.06f);
+                            }
+                        }
+                    }
+
+                    if (mWakeIdx < 0 && wakeupTime != null) {
+                        long delta1 = Math.abs(wakeupTime.getTime() - data.getCreateTime().getTime()) / 1000;
+                        if (delta1 <= 300) {
+                            if (i < len - 1) {
+                                long delta2 = Math.abs(wakeupTime.getTime() - mSensingDataList.get(i+1).getCreateTime().getTime()) / 1000;
+                                if (delta1 < delta2) {
+                                    mWakeIdx = i;
+                                    mEvents.set(i, 1.06f);
+                                }
+                            } else {
+                                mWakeIdx = i;
+                                mEvents.set(i, 1.06f);
+                            }
+                        }
+                    }
+                }
 			} 
 		}
 
@@ -252,12 +317,18 @@ public class LastNightFragment extends Fragment {
             DialogFragment dialog = new GraphViewTipDialogFragment();
             dialog.show(ft, "graphTip");
         }
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status", "LastNightFragment|Enter");
+        Constants.addNewUserEvent(mContext, event);
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		Log.d(Constants.TAG, "In onPause, LastNightFragment");
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status", "LastNightFragment|Exit");
+        Constants.addNewUserEvent(mContext, event);
 	}
 	
 	private float getScreenOnSeconds(String appUsage) {
@@ -277,22 +348,6 @@ public class LastNightFragment extends Fragment {
 	
 	private void drawGraph() {
 		if (mGraphExisting) return;
-
-        /*
-		if (mLightData.size() == 0) {
-			lightSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Light");
-			soundSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Sound");
-			screenOnSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Screen-On");
-			movementSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Movement");
-			eventsSeries = new SimpleXYSeries(Arrays.asList(new Float[] {0f, 0f}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Event");
-		} else {
-			lightSeries = new SimpleXYSeries(mLightData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Light");
-			soundSeries = new SimpleXYSeries(mSoundData, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Sound");
-			screenOnSeries = new SimpleXYSeries(mScreenOn, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Screen-On");
-			movementSeries = new SimpleXYSeries(mMovement, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Movement");
-			eventsSeries = new SimpleXYSeries(mEvents, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Event");
-		}
-		*/
 
         if (mLightData.size() == 0) {
             mLightData.add(0f);
@@ -334,6 +389,8 @@ public class LastNightFragment extends Fragment {
         eventFormat.setPointLabeler(new PointLabeler() {
             @Override
             public String getLabel(XYSeries series, int index) {
+                if (index == mSleepIdx) return "Sleep";
+                if (index == mWakeIdx) return "Wakeup";
                 if ((Float) series.getY(index) == 0f) return "";
                 else return mTimeLabels.get(index);
             }

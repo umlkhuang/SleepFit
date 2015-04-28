@@ -51,7 +51,8 @@ public class DatabaseConfigUtil extends OrmLiteConfigUtil {
 		SoundRaw.class,
 		ProximityRaw.class,
 		LifestyleRaw.class,
-		DailyLog.class
+		DailyLog.class,
+        UserEvents.class
 	};
 		
 	public static void main(String[] args) throws SQLException, IOException {

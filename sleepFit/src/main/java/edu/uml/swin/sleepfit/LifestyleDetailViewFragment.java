@@ -9,6 +9,7 @@ import java.util.Locale;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import mirko.android.datetimepicker.date.DatePickerDialog;
 import mirko.android.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import mirko.android.datetimepicker.time.RadialPickerLayout;
@@ -256,6 +257,9 @@ public class LifestyleDetailViewFragment extends Fragment implements AdapterView
 
         mTips = getResources().getStringArray(R.array.lifestyle_tip_items);
         mLifestyleTipText.setText(mTips[mLifestyleId]);
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status|type", "LifestyleListFragment|Enter|"+mLifestyleTypes[mLifestyleId]);
+        Constants.addNewUserEvent(getActivity(), event);
     }
 	
 	@Override
@@ -269,6 +273,9 @@ public class LifestyleDetailViewFragment extends Fragment implements AdapterView
 	@Override
 	public void onPause() {
 		super.onPause();
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status|type", "LifestyleListFragment|Exit|"+mLifestyleTypes[mLifestyleId]);
+        Constants.addNewUserEvent(getActivity(), event);
 	}
 	
 

@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.util.Constants;
+import mirko.android.datetimepicker.Utils;
 
 public class ConfigSleepTimeDialogFragment extends DialogFragment {
 
@@ -45,7 +47,7 @@ public class ConfigSleepTimeDialogFragment extends DialogFragment {
         final EditText hourText = (EditText) theView.findViewById(R.id.editSleepTime);
 
         SharedPreferences preferences = getActivity().getSharedPreferences(Constants.SURVEY_FILE_NAME, Context.MODE_MULTI_PROCESS);
-        String sleepHours = preferences.getString("sleepHours", "8");
+        final String sleepHours = preferences.getString("sleepHours", "8");
         hourText.setText(sleepHours);
 
         // Inflate and set the layout for the dialog
@@ -60,6 +62,9 @@ public class ConfigSleepTimeDialogFragment extends DialogFragment {
                         } else {
                             float hours = Float.valueOf(inputStr);
                             listener.onConfigSleepTimeFinished(hours);
+
+                            UserEvents event = new UserEvents(System.currentTimeMillis(), "name|from|to", "NeededSleepTime|"+sleepHours+"|"+inputStr);
+                            Constants.addNewUserEvent(getActivity(), event);
 
                             dismiss();
                         }

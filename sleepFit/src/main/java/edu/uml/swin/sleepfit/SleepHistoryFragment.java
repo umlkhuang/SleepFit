@@ -17,6 +17,7 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 
 import edu.uml.swin.sleepfit.DB.DatabaseHelper;
 import edu.uml.swin.sleepfit.DB.SleepLogger;
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.cardview.HistoryCard;
 import edu.uml.swin.sleepfit.cardview.HistoryListAdapter;
 import edu.uml.swin.sleepfit.cardview.HistoryListAdapter.OnItemClickListener;
@@ -169,12 +170,18 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
 			}
 		});
 		mRecyclerView.setAdapter(mAdapter);
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status", "SleepHistory|Enter");
+        Constants.addNewUserEvent(mContext, event);
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		Log.d(Constants.TAG, "In onPause, SleepHistoryFragment");
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status", "SleepHistory|Exit");
+        Constants.addNewUserEvent(mContext, event);
 	}
 
 
@@ -396,4 +403,6 @@ public class SleepHistoryFragment extends Fragment implements HttpRequestTask.Ht
         mContext.sendBroadcast(msg);
         onResume();
     }
+
+
 }

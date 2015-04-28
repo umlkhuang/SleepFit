@@ -5,20 +5,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import edu.uml.swin.sleepfit.DB.UserEvents;
 import edu.uml.swin.sleepfit.util.Constants;
 
 
@@ -63,8 +59,18 @@ public class MorningCardActivity extends ActionBarActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("morningTrackDate", mTrackDate);
         editor.commit();
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status|trackDate", "ClickMorningNotification|Enter|"+mTrackDate);
+        Constants.addNewUserEvent(this, event);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        UserEvents event = new UserEvents(System.currentTimeMillis(), "name|status|trackDate", "ClickMorningNotification|Exit|"+mTrackDate);
+        Constants.addNewUserEvent(this, event);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

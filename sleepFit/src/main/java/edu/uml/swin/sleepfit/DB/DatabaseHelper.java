@@ -22,7 +22,7 @@ import edu.uml.swin.sleepfit.util.Constants;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	
 	private static final String DATABASE_NAME = Constants.DB_NAME;
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	private Dao<SensingData, Integer> sensingDataDao = null;
 	private Dao<SleepLogger, Integer> sleepLoggerDao = null;
@@ -33,6 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<ProximityRaw, Integer> proximityRawDao = null;
 	private Dao<LifestyleRaw, Integer> lifestyleRawDao = null;
 	private Dao<DailyLog, Integer> dailyLogDao = null;
+    private Dao<UserEvents, Integer> userEventsDao = null;
 	
 	
 	public DatabaseHelper(Context context) {
@@ -53,9 +54,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, ProximityRaw.class);
 			TableUtils.createTable(connectionSource, LifestyleRaw.class);
 			TableUtils.createTable(connectionSource, DailyLog.class);
+            TableUtils.createTable(connectionSource, UserEvents.class);
 		} catch (SQLException e) {
 			Log.e(Constants.TAG, "Cannot create database: " + e.toString());
-			throw new RuntimeException(e);
 		}
     }
 	
@@ -77,6 +78,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, ProximityRaw.class, true);
 			TableUtils.dropTable(connectionSource, LifestyleRaw.class, true);
 			TableUtils.dropTable(connectionSource, DailyLog.class, true);
+            TableUtils.dropTable(connectionSource, UserEvents.class, true);
 			
 			TableUtils.createTable(connectionSource, SensingData.class);
 			//TableUtils.createTable(connectionSource, SleepLogger.class);
@@ -87,9 +89,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, ProximityRaw.class);
 			TableUtils.createTable(connectionSource, LifestyleRaw.class);
 			TableUtils.createTable(connectionSource, DailyLog.class);
+            TableUtils.createTable(connectionSource, UserEvents.class);
 		} catch (SQLException e) {
 			Log.e(Constants.TAG, "Cannot reset database: " + e.toString());
-			throw new RuntimeException(e);
 		}
 	}
 	
@@ -160,6 +162,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			DeleteBuilder<SleepLogger, Integer> builder9 = sleepLoggerDao.deleteBuilder();
 			builder9.where().le("wakeupTime", TS);
 			sleepLoggerDao.delete(builder9.prepare());
+
+            if (userEventsDao == null) {
+                userEventsDao = getDao(UserEvents.class);
+            }
+            DeleteBuilder<UserEvents, Integer> builder10 = userEventsDao.deleteBuilder();
+            builder10.where().le("createTime", TS);
+            userEventsDao.delete(builder10.prepare());
+
 		} catch (SQLException e) {
 			Log.e(Constants.TAG, "Delete old data failed: " + e.toString());
 			throw new RuntimeException(e);
@@ -168,7 +178,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	@Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-		// Nothing here 
+        // Nothing
     }
 	
 	@Override 
@@ -185,6 +195,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		proximityRawDao = null;
 		lifestyleRawDao = null;
 		dailyLogDao = null;
+        userEventsDao = null;
 	}
 	
 	public Dao<SensingData, Integer> getSensingDataDao() throws SQLException {
@@ -251,4 +262,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return dailyLogDao;
 	}
+
+    public Dao<UserEvents, Integer> getUserEventsDao() throws SQLException {
+        if (userEventsDao == null) {
+            userEventsDao = getDao(UserEvents.class);
+        }
+        return userEventsDao;
+    }
+
 }
